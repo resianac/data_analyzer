@@ -1,0 +1,65 @@
+type MarketplaceSearchResponse {
+    ads: [MarketplaceAd!]!
+    count: Int!
+    hasMore: Boolean!
+}
+
+type MarketplaceAd {
+    id: ID!
+    title: String!
+    price: MarketplacePrice
+    images: [String!]
+    category: MarketplaceCategory
+    location: String
+    postedAt: DateTime
+    features: [MarketplaceFeature!]
+    owner: MarketplaceOwner
+    carFeatures: MarketplaceCarFeatures
+    url: String!
+}
+
+type MarketplacePrice {
+    value: Float!
+    currency: String!
+    formatted: String!
+}
+
+type MarketplaceCategory {
+    id: ID!
+    title: String!
+    parent: MarketplaceCategory
+}
+
+type MarketplaceFeature {
+    id: ID!
+    name: String!
+    value: String!
+}
+
+type MarketplaceOwner {
+    id: ID!
+    login: String
+    avatar: String
+    isVerified: Boolean
+}
+
+type MarketplaceCarFeatures {
+    fuel: String
+    transmission: String
+    drive: String
+    mileage: Int
+    engineVolume: Float
+    year: Int
+}
+
+input MarketplaceFilterInput {
+    filterId: Int!
+    featureId: Int!
+    optionIds: [Int!]!
+}
+
+input MarketplacePaginationInput {
+    limit: Int = 78
+    skip: Int = 0
+    page: Int = 1
+}
