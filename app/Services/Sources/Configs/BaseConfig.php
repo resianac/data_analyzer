@@ -6,13 +6,14 @@ use App\Services\Sources\Contracts\ConfigInterface;
 
 abstract class BaseConfig implements ConfigInterface
 {
-    public string $baseUrl;
+    public string $baseApiUrl;
+    public static string $baseUrl;
     protected array $config = [];
 
     public function __construct(array $config = [])
     {
         $this->config = array_merge(
-            [...$this->getDefaults(), "base_url" => $this->baseUrl],
+            [...$this->getDefaults(), "base_url" => $this->baseApiUrl],
             $config,
         );
     }
@@ -35,6 +36,7 @@ abstract class BaseConfig implements ConfigInterface
     protected function getDefaults(): array
     {
         return [
+            "limit" => 50,
             'timeout' => 30,
             'cache_ttl' => 300,
             'headers' => [

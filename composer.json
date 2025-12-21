@@ -18,7 +18,8 @@
         "laravel/wayfinder": "^0.1.9",
         "mll-lab/laravel-graphiql": "^4.0",
         "nuwave/lighthouse": "^6.64",
-        "spatie/laravel-data": "^4.18"
+        "spatie/laravel-data": "^4.18",
+        "spatie/laravel-schemaless-attributes": "^2.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

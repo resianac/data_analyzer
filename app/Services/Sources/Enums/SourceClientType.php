@@ -4,5 +4,5 @@ namespace App\Services\Sources\Enums;
 
 enum SourceClientType: string
 {
-    case MARKETPLACE = 'marketplace';
+    case MARKETPLACE999 = 'marketplace999';
 }

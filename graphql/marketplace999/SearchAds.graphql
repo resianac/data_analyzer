@@ -1,0 +1,126 @@
+query SearchAds(
+  $input: Ads_SearchInput!
+  $isWorkCategory: Boolean = false
+  $includeCarsFeatures: Boolean = false
+  $includeBody: Boolean = false
+  $includeOwner: Boolean = false
+  $includeBoost: Boolean = false
+  $locale: Common_Locale
+) {
+  searchAds(input: $input) {
+    ads {
+      ...AdsSearchFragment
+    }
+    count
+  }
+}
+
+fragment AdsSearchFragment on Advert {
+  ...AdListFragment
+  ...WorkCategoryFeatures @include(if: $isWorkCategory)
+  reseted(
+    input: {
+      format: "2 Jan. 2006, 15:04"
+      locale: $locale
+      timezone: "Europe/Chisinau"
+      getDiff: false
+    }
+  )
+}
+
+fragment AdListFragment on Advert {
+  id
+  title
+  subCategory {
+    ...CategoryAdFragment
+  }
+  ...PriceAndImages
+  ...CarsFeatures @include(if: $includeCarsFeatures)
+  ...AdvertOwner @include(if: $includeOwner)
+
+  transportYear: feature(id: 19) {
+    ...FeatureValueFragment
+  }
+
+  realEstate: feature(id: 795) {
+    ...FeatureValueFragment
+  }
+
+  body: feature(id: 13) @include(if: $includeBody) {
+    ...FeatureValueFragment
+  }
+
+  ...AdvertBooster @include(if: $includeBoost)
+}
+
+fragment CategoryAdFragment on Category {
+  id
+  title { translated }
+  parent {
+    id
+    title { translated }
+    parent {
+      id
+      title { translated }
+    }
+  }
+}
+
+fragment PriceAndImages on Advert {
+  price: feature(id: 2) {
+    ...FeatureValueFragment
+  }
+  pricePerMeter: feature(id: 1385) {
+    ...FeatureValueFragment
+  }
+  oldPrice: feature(id: 1640) {
+    ...FeatureValueFragment
+  }
+  images: feature(id: 14) {
+    ...FeatureValueFragment
+  }
+}
+
+fragment FeatureValueFragment on FeatureValue {
+  id
+  type
+  value
+}
+
+fragment CarsFeatures on Advert {
+  carFuel: feature(id: 151) { ...FeatureValueFragment }
+  carDrive: feature(id: 108) { ...FeatureValueFragment }
+  carTransmission: feature(id: 101) { ...FeatureValueFragment }
+  mileage: feature(id: 104) { ...FeatureValueFragment }
+  engineVolume: feature(id: 103) { ...FeatureValueFragment }
+}
+
+fragment AdvertOwner on Advert {
+  owner {
+    id
+    login
+    avatar
+    createdDate
+    business {
+      plan
+      id
+    }
+    verification {
+      isVerified
+      date(input: { timezone: "Europe/Chisinau", getDiff: false })
+    }
+  }
+}
+
+fragment AdvertBooster on Advert {
+  booster: product(alias: BOOSTER) {
+    enable
+  }
+}
+
+fragment WorkCategoryFeatures on Advert {
+  salary: feature(id: 266) { ...FeatureValueFragment }
+  workSchedule: feature(id: 260) { ...FeatureValueFragment }
+  workExperience: feature(id: 263) { ...FeatureValueFragment }
+  education: feature(id: 261) { ...FeatureValueFragment }
+}

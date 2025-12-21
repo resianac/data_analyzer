@@ -1,0 +1,34 @@
+query FlatsSearch(
+  $input: Ads_SearchInput!
+  $includeBody: Boolean = false
+  $locale: Common_Locale
+) {
+  searchAds(input: $input) {
+    ads {
+      id
+      title
+      subCategory {
+        id
+        title { translated }
+      }
+
+      # Цены и метраж
+      price: feature(id: 2) { id type value }
+      oldPrice: feature(id: 1640) { id type value }
+      pricePerMeter: feature(id: 1385) { id type value }
+
+      # Тело объявления
+      body: feature(id: 13) @include(if: $includeBody) { id type value }
+
+      # Дополнительно: этаж, площадь и т.п. (пример)
+      rooms: feature(id: 241) { id type value }
+      floor: feature(id: 248) { id type value }
+      totalFloors: feature(id: 249) { id type value }
+
+      reseted(
+        input: { format: "2 Jan. 2006, 15:04", locale: $locale, timezone: "Europe/Chisinau", getDiff: false }
+      )
+    }
+    count
+  }
+}

@@ -5,6 +5,7 @@ namespace App\Services\Sources\Clients;
 use App\Services\Sources\Contracts\ConfigInterface;
 use App\Services\Sources\Contracts\DriverInterface;
 use App\Services\Sources\Contracts\SourceClientInterface;
+use App\Services\Sources\Drivers\GraphQLDriver;
 use App\Services\Sources\Enums\SourceClientType;
 use Illuminate\Support\Str;
 
@@ -13,20 +14,25 @@ abstract class BaseClient implements SourceClientInterface
     protected DriverInterface $driver;
     protected ConfigInterface $config;
     protected string $name;
+    protected int $count;
     protected SourceClientType $type;
 
-    public function __construct(DriverInterface $driver = null, ConfigInterface $config = null)
+    public function __construct(DriverInterface $driver, ConfigInterface $config = null)
     {
-        $driverClass = "App\\Services\\Sources\\Drivers\\" . Str::studly($this->name);
-        $configClass = "App\\Services\\Sources\\Configs\\" . Str::studly($this->name);
-
-        $this->driver = $driver ?? new $driverClass();
+        $configClass = "App\\Services\\Sources\\Configs\\" . Str::studly($this->name) . "Config";
         $this->config = $config ?? new $configClass();
+
+        $this->setDriver($driver);
     }
 
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getEntitiesCount(): int
+    {
+        return $this->count;
     }
 
     public function getType(): SourceClientType
@@ -44,5 +50,13 @@ abstract class BaseClient implements SourceClientInterface
         return $this->config;
     }
 
-    abstract public function fetch(array $params = []): mixed;
+    /**
+     * @param GraphQLDriver $driver
+     */
+    public function setDriver(DriverInterface $driver): static
+    {
+        $this->driver = $driver->setConfig($this->config);
+
+        return $this;
+    }
 }

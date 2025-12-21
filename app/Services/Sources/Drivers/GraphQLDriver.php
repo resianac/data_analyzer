@@ -6,76 +6,93 @@ use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Enums\SourceDriverType;
 use Exception;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+use RuntimeException;
+use Throwable;
 
 class GraphQLDriver extends BaseDriver
 {
     protected SourceDriverType $name = SourceDriverType::GRAPHQL;
-    private ?PendingRequest $client = null;
 
-    private function initializeClient(): void
+    protected function initializeClient(): void
     {
-        if ($this->client === null) {
-            $this->client = Http::timeout($this->config->get('timeout'))
-                ->withHeaders($this->config->get('headers') ?? []);
+        if ($this->client !== null) {
+            return;
+        }
 
-            $this->client->baseUrl($this->config['base_url']);
+        $this->client = Http::timeout($this->config->get('timeout'))
+            ->withHeaders($this->config->get('headers') ?? [])
+            ->baseUrl($this->config->get('base_url'));
+    }
+
+    public function call(...$params): Collection
+    {
+        try {
+            $this->initializeClient();
+
+            [$schema, $variables] = $params;
+
+            $query = is_file($schema)
+                ? file_get_contents($schema)
+                : $schema;
+
+            if ($query === false || $query === '') {
+                throw new RuntimeException('GraphQL query is empty or unreadable');
+            }
+
+            $response = $this->client->post('', [
+                'query'     => $query,
+                'variables' => $variables,
+            ]);
+
+            if ($response->failed()) {
+                throw new RuntimeException(
+                    'HTTP error: ' . $response->status() . ' ' . $response->body()
+                );
+            }
+
+            $json = $response->json();
+
+            if ($json === null) {
+                throw new RuntimeException('Invalid JSON response from GraphQL');
+            }
+
+            if (!empty($json['errors'])) {
+                throw new RuntimeException(
+                    'GraphQL errors: ' . json_encode($json['errors'], JSON_UNESCAPED_UNICODE)
+                );
+            }
+
+            return collect($json);
+
+
+        } catch (Throwable $e) {
+            throw new RuntimeException(
+            'GraphQL call failed: ' . $e->getMessage(),
+            previous: $e
+            );
         }
     }
 
     /**
-     * @throws Exception
+     * Выполнить запрос по указанной схеме
+     *
+     * @param string $schemaName имя .graphql файла
+     * @param array $variables variables для GraphQL
      */
-    public function query(string $query, array $variables = []): array
+    public function executeQuery(string $schemaName, array $variables): Collection
     {
-        return $this->execute('POST', '', ['query' => $query, 'variables' => $variables]);
+        $path = base_path("graphql/{$schemaName}.graphql");
+
+        return $this->call(
+            $path,
+            $variables,
+            Str::of($path)
+                ->beforeLast('/')
+                ->afterLast('/')
+                ->value()
+        );
     }
-
-    public function execute(string $method, string $endpoint, array $data = []): mixed
-    {
-        $this->initializeClient();
-
-        $query = $data['query'] ?? '';
-        $variables = $data['variables'] ?? [];
-        $operationName = $data['operationName'] ?? null;
-
-        $payload = [
-            'query' => $query,
-            'variables' => $variables,
-        ];
-
-        if ($operationName) {
-            $payload['operationName'] = $operationName;
-        }
-
-        try {
-            $response = $this->client->post($endpoint, $payload);
-
-            if ($response->failed()) {
-                throw new Exception("GraphQL request failed: " . $response->status());
-            }
-
-            $data = $response->json();
-
-            if (isset($data['errors'])) {
-                throw new Exception("GraphQL errors: " . json_encode($data['errors']));
-            }
-
-            return $data['data'] ?? $data;
-
-        } catch (Exception $e) {
-            for ($i = 0; $i < 3; $i++) {
-                try {
-                    usleep(1000 * 1000);
-                    $response = $this->client->post($endpoint, $payload);
-                    return $response->json()['data'] ?? $response->json();
-                } catch (Exception $retryException) {
-                    continue;
-                }
-            }
-
-            throw $e;
-        }
-    }
-
 }
