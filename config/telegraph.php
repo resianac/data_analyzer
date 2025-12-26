@@ -223,4 +223,8 @@ return [
     'payments' => [
         'provider_token' => env('TELEGRAPH_PAYMENT_PROVIDER_TOKEN', ''),
     ],
+
+    'ssl' => [
+        'self_signed' => env('TELEGRAM_SSL_FILE'),
+    ]
 ];
