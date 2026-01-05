@@ -7,6 +7,7 @@ class FlatDefaultVariables
     public static function base(int $limit, int $skip): array
     {
         return [
+            'locale' => 'en_US',
             'input' => [
                 'subCategoryId' => 1404,
                 'source' => 'AD_SOURCE_DESKTOP',
