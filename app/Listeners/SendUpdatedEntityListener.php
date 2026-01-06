@@ -36,16 +36,17 @@ class SendUpdatedEntityListener
             $original,
         );
 
-        if (!$formatter->hasWatchedChanges()) {
+        if (!$formatter->getWatchedChanges()) {
             return;
         }
 
-        Log::channel('sources.entity')->debug('[{source}][{filter_type}] Watched changes were fixed', [
-            'entity_id'   => $entity->id,
-            'source'      => $entity->source ?? null,
-            'filter_type' => $entity->filter_type ?? null,
-            'changes'     => $entity->getChanges(),
-        ]);
+        Log::channel('sources.entity')->debug(
+            "External ID: {$entity->external_id}. Watched changes were fixed ".
+            json_encode(
+                $formatter->getWatchedChanges(),
+                JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+            )
+        );
 
         $message = $formatter->get();
 

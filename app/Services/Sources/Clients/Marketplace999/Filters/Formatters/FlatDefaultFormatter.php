@@ -22,7 +22,7 @@ class FlatDefaultFormatter extends BaseFormatter
         $this->data->area = null;
         $this->data->discountPercent = null;
         $this->data->discountAmount = null;
-        $this->data->timeText = $this->hasWatchedChanges() ? "🔥 ИЗМЕНЕНА ЦЕНА" : "🆕 *Добавлено*";
+        $this->data->timeText = $this->getWatchedChanges() ? "🔥 ИЗМЕНЕНА ЦЕНА" : "🆕 *Добавлено*";
 
         $this->data->price = $this->number($entityData->price, ' €');
         $this->data->oldPrice = $this->number($entityData->oldPrice, ' €');
@@ -34,7 +34,7 @@ class FlatDefaultFormatter extends BaseFormatter
             $this->data->discountPercent = round((1 - $entityData->price / $entityData->oldPrice) * 100);
             $this->data->discountAmount = $this->number($entityData->oldPrice - $entityData->price);
         }
-        if (!$this->hasWatchedChanges()) {
+        if (!$this->getWatchedChanges()) {
             $this->data->timeText = $this->entity->data->reseted ? "🔄 *Обновлено*" : "🆕 *Новое*";
         }
 

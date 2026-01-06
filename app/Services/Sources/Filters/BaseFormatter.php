@@ -128,9 +128,29 @@ abstract class BaseFormatter implements FormatterInterface
     /**
      * Check if any watched fields were changed.
      */
-    public function hasWatchedChanges(): bool
+    public function getWatchedChanges(): array|null
     {
-        return (bool) array_intersect_key($this->changes, array_flip($this->watch));
+        $originalData = isset($this->original['data'])
+            ? $this->original['data']->toArray()
+            : [];
+        $changedData  = json_decode($this->changes['data'] ?? '{}', true);
+
+        $originalWatch = array_intersect_key($originalData, array_flip($this->watch));
+        $changedWatch  = array_intersect_key($changedData, array_flip($this->watch));
+
+        $diff = [];
+
+        foreach ($changedWatch as $key => $newValue) {
+            $oldValue = $originalWatch[$key] ?? null;
+            if ($oldValue !== $newValue) {
+                $diff[$key] = [
+                    'old' => $oldValue,
+                    'new' => $newValue,
+                ];
+            }
+        }
+
+        return empty($diff) ? null : $diff;
     }
 
     /**

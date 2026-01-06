@@ -38,7 +38,7 @@ class EntityRepository
 
         if ($query->exists() && !$fieldDoesNotExist) {
             Log::channel('sources.entity')->debug(
-                '[{source}][{filter_type}] Entity already exists '.
+                "Entity already exists ".
                 json_encode(
                     $entityData,
                     JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
