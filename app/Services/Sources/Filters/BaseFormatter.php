@@ -121,7 +121,7 @@ abstract class BaseFormatter implements FormatterInterface
         $diff = $changes[$field];
 
         return sprintf(
-            "$text ~~%s~~ → *%s*",
+            "$text ❌%s → *%s*",
             $diff['old'],
             $diff['new']
         );
