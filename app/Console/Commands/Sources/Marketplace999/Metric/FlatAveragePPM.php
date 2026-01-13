@@ -63,8 +63,8 @@ class FlatAveragePPM extends Command
                 "Flat's average PPM calculation: " .
                 json_encode([
                     'previous' => [
-                        '1_room' => $prevOneRoomMetric->value,
-                        '2_rooms' => $prevTwoRoomMetric->value,
+                        '1_room' => $prevOneRoomMetric?->value ?? "None",
+                        '2_rooms' => $prevTwoRoomMetric?->value ?? "None",
                     ],
                     'current' => [
                         '1_room' => $currOneRoomMetric->value,

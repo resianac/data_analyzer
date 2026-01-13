@@ -5,7 +5,7 @@ namespace App\Services\Sources\Clients\Marketplace999\Filters\Formatters\Metric;
 use App\Services\Sources\Filters\BaseFormatter;
 use stdClass;
 
-class FlatAveragePPMFormatter extends BaseFormatter
+class FlatAveragePpmFormatter extends BaseFormatter
 {
     protected function processData(): static
     {

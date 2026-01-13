@@ -110,18 +110,20 @@ abstract class BaseFormatter implements FormatterInterface
     /**
      * Render field with change highlighting.
      */
-    protected function changedField(string $field, mixed $current, string $text): ?string
+    protected function changedField(string $field, mixed $current, string $text): string
     {
-        $diff = $this->diff($field);
+        $changes = $this->getWatchedChanges();
 
-        if (!$diff) {
+        if (!$changes || !array_key_exists($field, $changes)) {
             return $this->addIf($current, "$text %s");
         }
 
+        $diff = $changes[$field];
+
         return sprintf(
-            "$text ~~%s~~ → *%s*",
-            $diff->old,
-            $diff->new
+            "$text ❌%s → *%s*",
+            $diff['old'],
+            $diff['new']
         );
     }
 
