@@ -14,6 +14,7 @@ class Metric extends Model
 
     protected $casts = [
         "key" => MetricKey::class,
+        "value" => "array",
         "source" => SourceClientType::class,
         "filter_type" => EntityFilter::class,
     ];

@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class FlatAveragePPM extends Command
+class FlatAveragePpm extends Command
 {
     /**
      * The name and signature of the console command.

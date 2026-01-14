@@ -74,19 +74,15 @@ class EntityRepository
             if ($entityModel->isDirty()) {
                 $entityModel->save();
             }
-
-//            Entity::updateOrCreate(
-//                [
-//                    'external_id' => $entity->external_id,
-//                    'source' => $entity->source
-//                ],
-//                $entity->toArray()
-//            );
         }
     }
 
-    public function getAvgByField(Builder $context, string $field, string $whereType = "", string $whereValue = "", string $value_type = "float"): float
-    {
+    public function getAvgByField(
+        Builder $context,
+        string $field,
+        string $whereType = "",
+        string $whereValue = ""
+    ): float {
         if (!empty($whereType) && !empty($whereValue)) {
             $context = $context->where("data->{$whereType}", $whereValue);
         }
@@ -94,5 +90,32 @@ class EntityRepository
         $avg = $context->avg("data->{$field}");
 
         return round((float) $avg, 2);
+    }
+
+    public function getMostFrequentByField(
+        Builder $context,
+        string $field,
+        string $whereType = "",
+        string $whereValue = ""
+    ): array {
+        if (!empty($whereType) && !empty($whereValue)) {
+            $context = $context->where("data->{$whereType}", $whereValue);
+        }
+
+        $result = $context
+            ->selectRaw("data->>'$.{$field}' as value, COUNT(*) as count")
+            ->groupBy("value")
+            ->orderByDesc("count")
+            ->limit(1)
+            ->first();
+
+        if (!$result) {
+            return ['value' => null, 'count' => 0];
+        }
+
+        return [
+            'value' => $result->value,
+            'count' => (int) $result->count,
+        ];
     }
 }

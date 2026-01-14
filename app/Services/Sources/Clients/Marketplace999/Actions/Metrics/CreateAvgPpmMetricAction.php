@@ -3,6 +3,7 @@
 namespace App\Services\Sources\Clients\Marketplace999\Actions\Metrics;
 
 use App\Services\Repository\MetricRepository;
+use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetAverageValueAction;
 use App\Services\Sources\Data\MetricData;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\MetricKey;
@@ -25,10 +26,10 @@ class CreateAvgPpmMetricAction
             "filter_type" => EntityFilter::FLAT_DEFAULT
         ];
 
-        $oneRoomAvg = (new CalcAverageAction())->handle("pricePerMeter",
+        $oneRoomAvg = (new GetAverageValueAction())->handle("pricePerMeter",
             "rooms","Apartament cu 1 cameră"
         );
-        $twoRoomsAvg = (new CalcAverageAction())->handle("pricePerMeter",
+        $twoRoomsAvg = (new GetAverageValueAction())->handle("pricePerMeter",
             "rooms","Apartament cu 2 camere"
         );
 

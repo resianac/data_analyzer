@@ -37,6 +37,9 @@ class FlatData extends Data
         public ?string $owner,
 
         #[WithCast(MarketplaceDateCast::class)]
+        public Carbon|string|null $posted,
+
+        #[WithCast(MarketplaceDateCast::class)]
         public Carbon|string|null $reseted,
         public ?string $url = null,
     ) {

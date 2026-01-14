@@ -17,8 +17,6 @@ class MetricData extends Data
         public MetricKey            $key,
         public SourceClientType     $source,
         public EntityFilter         $filter_type,
-        public float                $value,
-        public Carbon|Optional|null $created_at,
-        public Carbon|Optional|null $updated_at,
+        public mixed                $value,
     ) {}
 }

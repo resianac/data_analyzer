@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use App\Models\Entity;
 use App\Models\Metric;
 use App\Services\Repository\EntityRepository;
-use App\Services\Repository\MetricRepository;
+use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\CreateFlatSaleDynamicsMetricAction;
+use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Generators\GetFlatSaleDynamicsGeneratorAction;
+use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetMostFrequentValueAction;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\MetricKey;
 use App\Services\Sources\Enums\SourceClientType;
@@ -32,6 +34,16 @@ class Test extends Command
      */
     public function handle()
     {
+        $time = now()->subWeek()->startOfWeek();
+
+
+        dd((new CreateFlatSaleDynamicsMetricAction())->handle());
+
+        dd((new GetMostFrequentValueAction())->handle("owner", asOf: now()->startOfHour()));
+
+        dd(Entity::where("updated_at", "<", $time)->count());
+
+
         $context = Entity::whereSource(SourceClientType::MARKETPLACE999)
             ->whereFilterType(EntityFilter::FLAT_DEFAULT);
 
