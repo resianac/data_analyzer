@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Artisan;
     ->withoutOverlapping();
 
 \Illuminate\Support\Facades\Schedule::command('sources:marketplace999:metric:sale-dynamics')
-    ->weeklyOn(1, '09:00')
+    ->weeklyOn(1, '09:10')
     ->withoutOverlapping();
 \Illuminate\Support\Facades\Schedule::command('sources:marketplace999:metric:ppm')
-    ->weeklyOn(1, '09:00')
+    ->weeklyOn(1, '09:15')
     ->withoutOverlapping();

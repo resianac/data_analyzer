@@ -115,7 +115,7 @@ class FlatSaleDynamicsFormatter extends BaseFormatter
 
         $change = match (true) {
             is_null($prev) => '',
-            $prev->value && $curr->value && $curr->value !== $prev->value => "\n*Ранее*: $prev->value",
+            $prev->value && $curr->value => "\n*Ранее*: $prev->value ($prev->count шт.)",
             $prev->value && !$curr->value => "\n*Ранее*: $prev->value (сейчас нет данных)",
             !$prev->value && $curr->value => "\n*Ранее*: нет данных",
         };

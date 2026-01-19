@@ -54,10 +54,10 @@ class FlatSaleDynamics extends Command
                 MetricKey::FLAT_TOP_SOLD_OWNER,
             ]
         );
-        $this->showValues("\nPrevious metrics:", $prevMetrics);
+        $this->showValues("\nPrevious metrics: ", $prevMetrics);
 
         $currentMetrics = (new CreateFlatSaleDynamicsMetricAction())->handle($fromDate, $toDate);
-        $this->showValues("Current metrics:", $currentMetrics);
+        $this->showValues("Current metrics: ", $currentMetrics);
 
         Log::channel('sources.metric')->debug(
             "Flat sale dynamics calculation".

@@ -4,7 +4,9 @@ namespace App\Services\Sources\Filters;
 
 use App\Models\Entity;
 use App\Services\Sources\Contracts\FormatterInterface;
+use RuntimeException;
 use stdClass;
+use Throwable;
 
 abstract class BaseFormatter implements FormatterInterface
 {
@@ -33,6 +35,7 @@ abstract class BaseFormatter implements FormatterInterface
      * @param mixed $subject
      * @param array $changes Changed attributes
      * @param array $original Original attributes
+     * @throws Throwable
      */
     public function __construct(mixed $subject, array $changes = [], array $original = [])
     {
@@ -41,11 +44,27 @@ abstract class BaseFormatter implements FormatterInterface
         $this->subject = $subject;
         $this->data = new stdClass();
 
-        $this->processData()
-            ->setHeader()
-            ->setBody();
+        try {
+            $this->processData()
+                ->setHeader()
+                ->setBody();
+        } catch (Throwable $e) {
+            throw new RuntimeException(
+                sprintf(
+                    "Formatting error in %s: %s\nSubject: %s",
+                    static::class,
+                    $e->getMessage(),
+                    is_object($subject) ? get_class($subject) : gettype($subject)
+                ),
+                0,
+                $e
+            );
+        }
     }
 
+    /**
+     * @throws Throwable
+     */
     public static function make(mixed $subject): static
     {
         return new static($subject);
