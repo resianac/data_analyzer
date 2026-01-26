@@ -84,7 +84,9 @@ class EntityRepository
         string $whereValue = ""
     ): float {
         if (!empty($whereType) && !empty($whereValue)) {
-            $context = $context->where("data->{$whereType}", $whereValue);
+            $context = $context
+                ->where("data->{$whereType}", $whereValue)
+                ->where("updated_at", ">", now()->startOfHour()->subMinute());
         }
 
         $avg = $context->avg("data->{$field}");

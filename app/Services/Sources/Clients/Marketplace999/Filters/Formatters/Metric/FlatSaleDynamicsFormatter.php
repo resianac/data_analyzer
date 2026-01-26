@@ -90,7 +90,7 @@ class FlatSaleDynamicsFormatter extends BaseFormatter
         $change = '';
         if ($prevVal !== null && $currVal !== null && $prevVal != 0) {
             $diff = $currVal - $prevVal;
-            $percent = round(($diff / $prevVal) * 100, 1);
+            $percent = round(abs(($diff / $prevVal) * 100), 1);
             $sign = $diff > 0 ? '+' : ($diff < 0 ? '-' : '');
             $emoji = $diff > 0 ? '📈' : ($diff < 0 ? '📉' : '→');
 
