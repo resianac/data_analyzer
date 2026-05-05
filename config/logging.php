@@ -150,6 +150,15 @@ return [
                 'replace_placeholders' => true,
             ],
         ],
+
+        "telegram" => [
+            "error" => [
+                'driver' => 'single',
+                'path' => storage_path('logs/telegram/error.log'),
+                'level' => 'debug',
+                'replace_placeholders' => true,
+            ],
+        ]
     ],
 
 ];
