@@ -51,7 +51,12 @@ class FlatDefaultFormatter extends BaseFormatter
             ? mb_substr($this->subject->title, 0, 100) . '…'
             : $this->subject->title;
 
-        $this->header = "$statusEmoji\n*{$title}*\n";
+        $source = mb_strtoupper($this->subject->source->value);
+
+        $this->header = "*{$source}*";
+        $this->header .= " • {$this->subject->filter_type->value}\n";
+
+        $this->header .= "$statusEmoji\n*{$title}*\n";
         $this->header .= $this->addIf($this->data->area, "*%s* м² | ") . "*ID:* `{$this->subject->external_id}`";
 
         return $this;

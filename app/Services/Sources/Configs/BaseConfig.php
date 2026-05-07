@@ -9,8 +9,6 @@ abstract class BaseConfig implements ConfigInterface
 {
     public static string $baseUrl;
 
-    public string $baseApiUrl;
-
     protected array $config = [];
 
     /**
@@ -22,7 +20,7 @@ abstract class BaseConfig implements ConfigInterface
     public function __construct(array $config = [])
     {
         $this->config = array_merge(
-            [...$this->getDefaults(), "base_url" => $this->baseApiUrl],
+            [...$this->getDefaults(), "base_url" => static::$baseUrl],
             $config,
         );
     }

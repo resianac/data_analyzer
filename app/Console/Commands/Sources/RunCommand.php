@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Sources;
 
 use App\Services\Sources\Clients\Marketplace999\Actions\SearchFlatsAction;
+use App\Services\Sources\Clients\RabotaMd\Actions\SearchJobsAction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -30,16 +31,19 @@ class RunCommand extends Command
         $this->info('▶ Starting sources run');
 
         try {
+            $this->line('• Running jobs source...');
+            (new SearchJobsAction())->handle();
+            $this->info('✔ Jobs source finished successfully');
+
             $this->line('• Running flats source...');
-
             (new SearchFlatsAction())->handle();
-
             $this->info('✔ Flats source finished successfully');
 
-            Log::channel("sources.command")->info('Flats source finished successfully');
+            Log::channel('sources.command')->info('All sources finished successfully');
         } catch (\Throwable $e) {
-            $this->error('✖ Flats source failed');
-            Log::channel("sources.command")->error('[sources] Flats source error', [
+            $this->error('✖ Sources run failed');
+
+            Log::channel('sources.command')->error('[sources] Run error', [
                 'message' => $e->getMessage(),
                 'trace'   => $e->getTraceAsString(),
             ]);

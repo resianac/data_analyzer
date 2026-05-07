@@ -19,7 +19,8 @@
         "mll-lab/laravel-graphiql": "^4.0",
         "nuwave/lighthouse": "^6.64",
         "spatie/laravel-data": "^4.18",
-        "spatie/laravel-schemaless-attributes": "^2.5"
+        "spatie/laravel-schemaless-attributes": "^2.5",
+        "symfony/dom-crawler": "^8.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

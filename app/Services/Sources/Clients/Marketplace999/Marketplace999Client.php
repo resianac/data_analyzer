@@ -3,6 +3,7 @@
 namespace App\Services\Sources\Clients\Marketplace999;
 
 use App\Services\Sources\Clients\BaseClient;
+use App\Services\Sources\Clients\Marketplace999\Data\FlastData;
 use App\Services\Sources\Clients\Marketplace999\Data\FlatData;
 use App\Services\Sources\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;

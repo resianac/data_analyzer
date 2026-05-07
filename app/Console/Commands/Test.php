@@ -8,6 +8,7 @@ use App\Services\Repository\EntityRepository;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\CreateFlatSaleDynamicsMetricAction;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Generators\GetFlatSaleDynamicsGeneratorAction;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetMostFrequentValueAction;
+use App\Services\Sources\Clients\RabotaMd\Actions\SearchJobsAction;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\MetricKey;
 use App\Services\Sources\Enums\SourceClientType;
@@ -37,7 +38,9 @@ class Test extends Command
         $time = now()->subWeek()->startOfWeek();
 
 
-        dd((new CreateFlatSaleDynamicsMetricAction())->handle());
+        (new SearchJobsAction())->handle();
+
+        dd('test');
 
         dd((new GetMostFrequentValueAction())->handle("owner", asOf: now()->startOfHour()));
 
