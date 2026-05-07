@@ -8,6 +8,7 @@ use App\Services\Sources\Enums\EntityFilter;
 abstract class BaseConfig implements ConfigInterface
 {
     public static string $baseUrl;
+    public string $baseApiUrl = '';
 
     protected array $config = [];
 
@@ -20,7 +21,11 @@ abstract class BaseConfig implements ConfigInterface
     public function __construct(array $config = [])
     {
         $this->config = array_merge(
-            [...$this->getDefaults(), "base_url" => static::$baseUrl],
+            [
+                ...$this->getDefaults(),
+                "base_url" => static::$baseUrl,
+                "base_api_url" => $this->baseApiUrl
+            ],
             $config,
         );
     }

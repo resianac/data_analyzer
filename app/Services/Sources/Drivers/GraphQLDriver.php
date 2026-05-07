@@ -24,7 +24,7 @@ class GraphQLDriver extends BaseDriver
 
         $this->client = Http::timeout($this->config->get('timeout'))
             ->withHeaders($this->config->get('headers') ?? [])
-            ->baseUrl($this->config->get('base_url'));
+            ->baseUrl($this->config->get('base_api_url'));
     }
 
     public function call(...$params): Collection

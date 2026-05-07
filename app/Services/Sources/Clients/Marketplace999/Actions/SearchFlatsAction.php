@@ -7,6 +7,7 @@ use App\Services\Pipelines\EntityProcessing\StoreEntitiesPipe;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Marketplace999\Marketplace999Client;
 use App\Services\Sources\Configs\BaseConfig;
+use App\Services\Sources\Contracts\ConfigInterface;
 use App\Services\Sources\Drivers\GraphQLDriver;
 use App\Services\Sources\Enums\EntityFilter;
 use Illuminate\Pipeline\Pipeline;
@@ -15,7 +16,7 @@ class SearchFlatsAction
 {
     private int|null $count;
     private BaseClient $client;
-    private BaseConfig $config;
+    private BaseConfig|ConfigInterface $config;
 
     public function __construct()
     {
