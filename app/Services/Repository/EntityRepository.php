@@ -6,10 +6,15 @@ use App\Models\Entity;
 use App\Services\Sources\Data\EntityData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
-class EntityRepository
+readonly class EntityRepository
 {
+    public function __construct(
+        private ?MetricTracker $metricTracker = null
+    ) {}
+
     /**
      * Checks the given entity data against the database for duplicates based on specified fields.
      *
@@ -56,25 +61,32 @@ class EntityRepository
     /**
      * @param Collection<EntityData> $entities
      * @return void
+     * @throws Throwable
      */
     public function storeMany(Collection $entities): void
     {
-        foreach ($entities as $data) {
-            $entityModel = Entity::where('external_id', $data->external_id)
-                ->where('source', $data->source)
-                ->first();
+        DB::transaction(function () use ($entities) {
+            foreach ($entities as $data) {
+                $entityModel = Entity::where('external_id', $data->external_id)
+                    ->where('source', $data->source)
+                    ->first();
 
-            if (!$entityModel) {
-                Entity::create($data->toArray());
-                continue;
+                if (!$entityModel) {
+                    $entity = Entity::create($data->toArray());
+
+                    $this->metricTracker->trackForByFields($entity);
+                    continue;
+                }
+
+                $entityModel->fill($data->toArray());
+
+                if ($entityModel->isDirty()) {
+                    $entityModel->save();
+
+                    $this->metricTracker->trackForByFields($entityModel);
+                }
             }
-
-            $entityModel->fill($data->toArray());
-
-            if ($entityModel->isDirty()) {
-                $entityModel->save();
-            }
-        }
+        });
     }
 
     public function getAvgByField(

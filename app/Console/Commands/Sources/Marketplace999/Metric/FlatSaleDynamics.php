@@ -4,7 +4,7 @@ namespace App\Console\Commands\Sources\Marketplace999\Metric;
 
 use App\Jobs\SendMessageToTelegram;
 use App\Models\Metric;
-use App\Services\Repository\MetricRepository;
+use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\CreateFlatSaleDynamicsMetricAction;
 use App\Services\Sources\Data\MetricData;
 use App\Services\Sources\Enums\EntityFilter;
@@ -42,7 +42,7 @@ class FlatSaleDynamics extends Command
 
         $this->info('Starting flat sale dynamics calculation...');
 
-        $prevMetrics = (new MetricRepository())->getPreviousMetrics(
+        $prevMetrics = (new MetricTracker())->getPreviousMetrics(
             SourceClientType::MARKETPLACE999,
             EntityFilter::FLAT_DEFAULT,
             [

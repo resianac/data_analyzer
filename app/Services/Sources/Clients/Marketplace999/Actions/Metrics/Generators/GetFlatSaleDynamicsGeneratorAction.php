@@ -3,7 +3,7 @@
 namespace App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Generators;
 
 use App\Models\Entity;
-use App\Services\Repository\MetricRepository;
+use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetAverageValueAction;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetMostFrequentValueAction;
 use App\Services\Sources\Enums\EntityFilter;

@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Services\Sources\Clients\{{ name }};
+
+use App\Services\Sources\Clients\BaseClient;
+use App\Services\Sources\Clients\{{ name }}\Data\{{ name }}Data;
+use App\Services\Sources\Clients\{{ name }}\Enums\{{ name }}SearchParam;
+use App\Services\Sources\Data\EntityData;
+use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Enums\SourceClientType;
+use App\Services\Sources\Filters\Factories\VariableFactory;
+use Illuminate\Support\Collection;
+
+class {{ name }}Client extends BaseClient
+{
+    protected string $name = '{{ nameLower }}';
+    protected SourceClientType $type = SourceClientType::{{ nameUpper }};
+
+    /**
+     * @param string $operationName
+     * @param array $selectors
+     * @return Collection
+     */
+    public function execute(string $operationName, array $selectors): Collection
+    {
+        return $this->driver->call($operationName, $selectors);
+    }
+
+    /**
+     * @param EntityFilter $filter
+     * @param {{ name }}SearchParam $param
+     * @param string $page
+     * @return Collection<EntityData>
+     */
+    public function search(EntityFilter $filter, {{ name }}SearchParam $param, string $page): Collection
+    {
+        $variableClass = (new VariableFactory)->make($this->type, $filter);
+
+        $data = $this->execute(
+            "{$param->value}?page=$page",
+            $variableClass::byItems()
+        );
+
+        return {{ name }}Data::collect($data['entities'], Collection::class)
+            ->map(fn ({{ name }}Data $item) => $item->toGeneral($filter));
+    }
+}

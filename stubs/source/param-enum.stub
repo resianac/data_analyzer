@@ -1,0 +1,8 @@
+<?php
+
+namespace App\Services\Sources\Clients\{{ name }}\Enums;
+
+enum {{ name }}SearchParam: string
+{
+    // TODO: fill search cases
+}

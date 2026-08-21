@@ -13,4 +13,7 @@ enum MetricKey: string
     case FLAT_AVG_DAYS_STAYING = 'flat_avg_days_staying';
     case FLAT_TOP_SOLD_OWNER = 'flat_top_sold_owner';
     case FLAT_TOP_SOLD_TITLE = 'flat_top_sold_title';
+
+    case PRICE = 'price';
+    case DISCOUNT = 'discount';
 }

@@ -42,7 +42,7 @@ class HtmlParserDriver extends BaseDriver
 
             if ($response->failed()) {
                 throw new RuntimeException(
-                    'HTTP error: ' . $response->status() . ' ' . $response->body()
+                    "HTTP error: {$response->status()} \n URL: {$response->effectiveUri()}"
                 );
             }
 
@@ -52,8 +52,14 @@ class HtmlParserDriver extends BaseDriver
             );
 
         } catch (Throwable $e) {
+            $message = strlen($e->getMessage()) > 500
+                ? substr($e->getMessage(), 0, 500) . '... (truncated)'
+                : $e->getMessage();
+
             throw new RuntimeException(
-                'HTML fetch failed: ' . $e->getMessage(),
+                "Parser call failed for operation [{$operationName}]: " . $message,
+                0,
+                $e
             );
         }
     }
@@ -115,7 +121,7 @@ class HtmlParserDriver extends BaseDriver
         }
     }
 
-    protected function parseElement(array|string $config, Crawler $crawler = null): ?string
+    protected function parseElement(array|string $config, Crawler $crawler = null): array|string|null
     {
         if (!$crawler) {
             $crawler = $this->crawler;
@@ -133,11 +139,20 @@ class HtmlParserDriver extends BaseDriver
             $nodes = $crawler->filter($config['selector']);
 
             if ($nodes->count() > 0) {
+                $node = $nodes->first();
+                $value = null;
+
                 if (isset($config['attribute'])) {
-                    return $nodes->first()->attr($config['attribute']);
+                    $value = $node->attr($config['attribute']);
+                } else {
+                    $value = trim($node->text());
                 }
 
-                return trim($nodes->first()->text());
+                if (isset($config['cast']) && $config['cast'] === 'array') {
+                    $value = json_decode($value, true);
+                }
+
+                return $value;
             }
 
             return null;

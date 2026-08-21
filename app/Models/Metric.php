@@ -7,6 +7,7 @@ use App\Services\Sources\Enums\MetricKey;
 use App\Services\Sources\Enums\SourceClientType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Metric extends Model
 {
@@ -18,6 +19,11 @@ class Metric extends Model
         "source" => SourceClientType::class,
         "filter_type" => EntityFilter::class,
     ];
+
+    public function entity(): BelongsTo
+    {
+        return $this->belongsTo(Entity::class);
+    }
 
     public function scopeContext(
         Builder $query,

@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Casts\SchemalessAttributesCast;
 use App\Services\Sources\Enums\SourceClientType;
 use App\Services\Sources\Enums\EntityFilter;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Entity extends Model
 {
@@ -14,6 +15,11 @@ class Entity extends Model
     protected $casts = [
         "source" => SourceClientType::class,
         "filter_type" => EntityFilter::class,
-        "data" => SchemalessAttributes::class,
+        "data" => SchemalessAttributesCast::class,
     ];
+
+    public function metrics(): HasMany
+    {
+        return $this->hasMany(Metric::class);
+    }
 }

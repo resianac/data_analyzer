@@ -2,7 +2,7 @@
 
 namespace App\Services\Sources\Clients\Marketplace999\Actions\Metrics;
 
-use App\Services\Repository\MetricRepository;
+use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetAverageValueAction;
 use App\Services\Sources\Data\MetricData;
 use App\Services\Sources\Enums\EntityFilter;
@@ -20,7 +20,7 @@ class CreateAvgPpmMetricAction
     {
         $result = [];
 
-        $metricRepository = new MetricRepository();
+        $metricRepository = new MetricTracker();
         $context = [
             "source" => SourceClientType::MARKETPLACE999,
             "filter_type" => EntityFilter::FLAT_DEFAULT

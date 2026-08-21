@@ -13,15 +13,20 @@ return new class extends Migration
     {
         Schema::create('metrics', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('entity_id')->nullable()->constrained('entities')->onDelete('cascade');
+
             $table->string('key');
-            $table->float('value');
+            $table->json('value');
 
             $table->string('source', 50)->comment("Marketplace999, ...");
             $table->string('filter_type', 50)->comment("flat_default, ...");
 
             $table->timestamps();
 
+            $table->index(['entity_id', 'key', 'created_at']);
             $table->index(['key', 'source', 'filter_type', 'created_at']);
+            $table->index(['entity_id', 'created_at']);
         });
     }
 

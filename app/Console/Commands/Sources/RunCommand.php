@@ -32,8 +32,8 @@ class RunCommand extends Command
 
         try {
             $this->line('• Running jobs source...');
-            (new SearchJobsAction())->handle();
-            $this->info('✔ Jobs source finished successfully');
+//            (new SearchJobsAction())->handle();
+//            $this->info('✔ Jobs source finished successfully');
 
             $this->line('• Running flats source...');
             (new SearchFlatsAction())->handle();

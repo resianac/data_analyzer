@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Services\Sources\Clients\{{ name }}\Normalizers;
+
+use App\Services\Sources\Clients\{{ name }}\Enums\{{ name }}SearchParam;
+use App\Services\Sources\Contracts\NormalizerInterface;
+use RuntimeException;
+
+class {{ name }}NormalizerFactory
+{
+    public static array $map = [
+        // TODO: register normalizers for each search param
+        // {{ name }}SearchParam::EXAMPLE->value => Example{{ name }}MatchNormalizer::class,
+    ];
+
+    public static function make({{ name }}SearchParam $searchParam): NormalizerInterface
+    {
+        $normalizerClass = self::$map[$searchParam->value]
+            ?? throw new RuntimeException(
+                "No normalizer registered for {{ name }} search param [{$searchParam->value}]."
+            );
+
+        return new $normalizerClass();
+    }
+}

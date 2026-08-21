@@ -15,11 +15,13 @@ abstract class BaseClient implements SourceClientInterface
     protected ConfigInterface $config;
     protected string $name;
     protected int $count;
+    protected bool $hasNextPage = false;
     protected SourceClientType $type;
 
     public function __construct(DriverInterface $driver, ConfigInterface $config = null)
     {
-        $configClass = "App\\Services\\Sources\\Configs\\" . Str::studly($this->name) . "Config";
+        $sourceName = Str::studly($this->name);
+        $configClass = "App\\Services\\Sources\\Clients\\$sourceName\\{$sourceName}Config";
         $this->config = $config ?? new $configClass();
 
         $this->setDriver($driver);
@@ -33,6 +35,11 @@ abstract class BaseClient implements SourceClientInterface
     public function getEntitiesCount(): int
     {
         return $this->count;
+    }
+
+    public function hasNextPage(): bool
+    {
+        return $this->hasNextPage;
     }
 
     public function getType(): SourceClientType

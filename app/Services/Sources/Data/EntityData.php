@@ -14,6 +14,7 @@ class EntityData extends Data
     public function __construct(
         public int|Optional         $id,
         public string               $external_id,
+        public string               $match_id,
         public string               $title,
         public SourceClientType     $source,
         public EntityFilter         $filter_type,

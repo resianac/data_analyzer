@@ -14,7 +14,7 @@ class EntityObserver
      */
     public function created(Entity $entity): void
     {
-        event(new EntityCreated($entity));
+//        event(new EntityCreated($entity));
     }
 
     /**
@@ -28,11 +28,11 @@ class EntityObserver
 //            'filter_type' => $entity->filter_type ?? null,
 //        ]);
 
-        event(new EntityUpdated(
-            $entity,
-            $entity->getChanges(),
-            $entity->getOriginal()
-        ));
+//        event(new EntityUpdated(
+//            $entity,
+//            $entity->getChanges(),
+//            $entity->getOriginal()
+//        ));
     }
 
     /**

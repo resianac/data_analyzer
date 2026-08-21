@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Services\Sources\Clients\{{ name }}\Filters\Variables\Html;
+
+use App\Services\Sources\Contracts\Variables\HtmlVariablesInterface;
+
+class {{ name }}HtmlVariables implements HtmlVariablesInterface
+{
+    public static function byItems(): array
+    {
+        return [
+            // TODO: describe selectors for HTML parsing
+        ];
+    }
+}

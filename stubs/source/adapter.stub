@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Services\Sources\Clients\{{ name }}\Adapters;
+
+use App\Services\Sources\Clients\{{ name }}\Data\{{ name }}Data;
+use App\Services\Sources\Contracts\AdapterInterface;
+use App\Services\Sources\Data\EntityData;
+use App\Services\Sources\Enums\EntityFilter;
+
+class {{ name }}DataAdapter implements AdapterInterface
+{
+   public static function toGeneral({{ name }}Data $data, EntityFilter $filter): EntityData
+   {
+       return EntityData::from([
+
+       ]);
+   }
+}
