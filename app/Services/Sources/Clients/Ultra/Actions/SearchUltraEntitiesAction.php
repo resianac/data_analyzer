@@ -4,6 +4,7 @@ namespace App\Services\Sources\Clients\Ultra\Actions;
 
 use App\Services\Pipelines\EntityProcessing\FilterDuplicatesPipe;
 use App\Services\Pipelines\EntityProcessing\StoreEntitiesPipe;
+use App\Services\Repository\EntityMasterRepository;
 use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Enter\EnterClient;
@@ -15,6 +16,7 @@ use App\Services\Sources\Clients\Ultra\UltraClient;
 use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Contracts\ConfigInterface;
 use App\Services\Sources\Data\EntityData;
+use App\Services\Sources\Data\EntityMasterData;
 use App\Services\Sources\Drivers\GraphQLDriver;
 use App\Services\Sources\Drivers\HtmlParserDriver;
 use App\Services\Sources\Enums\EntityFilter;
@@ -46,6 +48,9 @@ class SearchUltraEntitiesAction
                 ->send($result)
                 ->through([
                     StoreEntitiesPipe::make(
+                        EntityMasterRepository::makeWithData(
+                            EntityMasterData::from(['category' => strtolower($this->searchParam->name)])
+                        ),
                         MetricTracker::make($this->config->get('metric_fields'))
                     ),
                 ])

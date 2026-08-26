@@ -6,6 +6,7 @@ use App\Casts\SchemalessAttributesCast;
 use App\Services\Sources\Enums\SourceClientType;
 use App\Services\Sources\Enums\EntityFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Entity extends Model
@@ -17,6 +18,11 @@ class Entity extends Model
         "filter_type" => EntityFilter::class,
         "data" => SchemalessAttributesCast::class,
     ];
+
+    public function master(): BelongsTo
+    {
+        return $this->belongsTo(EntityMaster::class);
+    }
 
     public function metrics(): HasMany
     {

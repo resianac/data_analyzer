@@ -2,7 +2,6 @@
 
 namespace App\Services\Sources\Clients\Ultra\Normalizers;
 
-use App\Services\Sources\Clients\Enter\Data\EnterData;
 use App\Services\Sources\Clients\Ultra\Data\UltraData;
 use App\Services\Sources\Support\BaseNormalizer;
 use Illuminate\Support\Facades\Log;

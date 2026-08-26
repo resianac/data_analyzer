@@ -128,6 +128,13 @@ return [
         ],
 
         "sources" => [
+            "error" => [
+                'driver' => 'single',
+                'path' => storage_path('logs/sources/entity_errors.log'),
+                'level' => 'debug',
+                'replace_placeholders' => true,
+            ],
+
             "entity" => [
                 'driver' => 'single',
                 'path' => storage_path('logs/sources/entities.log'),

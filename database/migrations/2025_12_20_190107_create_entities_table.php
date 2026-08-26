@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('entities', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('entity_master_id')->nullable()->constrained()->nullOnDelete();
             $table->string('external_id')->nullable();
-            $table->string('match_id')->nullable();
             $table->string('title');
             $table->string('source', 50);
             $table->string('filter_type', 50)->comment("flat_default, ...");
@@ -25,7 +25,6 @@ return new class extends Migration
             $table->unique(['external_id', 'source']);
             $table->index(['source', 'filter_type']);
             $table->index(['title']);
-            $table->index(['match_id']);
         });
     }
 

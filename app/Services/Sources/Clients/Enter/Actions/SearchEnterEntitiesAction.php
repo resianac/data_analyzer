@@ -4,6 +4,7 @@ namespace App\Services\Sources\Clients\Enter\Actions;
 
 use App\Services\Pipelines\EntityProcessing\FilterDuplicatesPipe;
 use App\Services\Pipelines\EntityProcessing\StoreEntitiesPipe;
+use App\Services\Repository\EntityMasterRepository;
 use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Enter\EnterClient;
@@ -13,6 +14,7 @@ use App\Services\Sources\Clients\RabotaMd\RabotaMdClient;
 use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Contracts\ConfigInterface;
 use App\Services\Sources\Data\EntityData;
+use App\Services\Sources\Data\EntityMasterData;
 use App\Services\Sources\Drivers\GraphQLDriver;
 use App\Services\Sources\Drivers\HtmlParserDriver;
 use App\Services\Sources\Enums\EntityFilter;
@@ -26,7 +28,7 @@ class SearchEnterEntitiesAction
     private BaseConfig|ConfigInterface $config;
 
     public function __construct(
-        private readonly EnterSearchParam $category,
+        private readonly EnterSearchParam $searchParam,
         private readonly EntityFilter     $filter = EntityFilter::ENTER_ENTITY,
     ) {
         $this->client = new EnterClient(HtmlParserDriver::make());
@@ -36,7 +38,7 @@ class SearchEnterEntitiesAction
     public function handle(): void
     {
         foreach ($this->paginate() as $page) {
-            $result = $this->client->search($this->filter, $this->category, $page);
+            $result = $this->client->search($this->filter, $this->searchParam, $page);
 
             $this->hasNextPage = $this->client->hasNextPage();
 
@@ -44,7 +46,10 @@ class SearchEnterEntitiesAction
                 ->send($result)
                 ->through([
                     StoreEntitiesPipe::make(
-                        MetricTracker::make($this->config->get('metric_fields'))
+                        EntityMasterRepository::makeWithData(
+                            EntityMasterData::from(['category' => strtolower($this->searchParam->name)])
+                        ),
+                        MetricTracker::make($this->config->get('metric_fields')),
                     ),
                 ])
                 ->thenReturn();

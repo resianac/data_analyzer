@@ -48,13 +48,15 @@ readonly class MetricTracker
             ->latest()
             ->first();
 
-        if ($lastMetric && $lastMetric->value == $entity->data->{$key->value}) {
+        $value = $entity->data->{$key->value} ?? 0;
+
+        if ($lastMetric && $lastMetric->value == $value) {
             return null;
         }
 
         return $entity->metrics()->create([
             'key' => $key,
-            'value' => $entity->data->{$key->value},
+            'value' => $value,
             "source" => $entity->source,
             "filter_type" => $entity->filter_type
         ]);

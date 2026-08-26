@@ -2,6 +2,7 @@
 
 namespace App\Services\Pipelines\EntityProcessing;
 
+use App\Services\Repository\EntityMasterRepository;
 use App\Services\Repository\EntityRepository;
 use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Data\EntityData;
@@ -12,12 +13,16 @@ use Throwable;
 readonly class StoreEntitiesPipe
 {
     public function __construct(
+        private EntityMasterRepository $masterRepository,
         private ?MetricTracker $metricTracker = null
     ) {}
 
-    public static function make(?MetricTracker $metricTracker = null): self
+    public static function make(
+        EntityMasterRepository $masterRepository,
+        ?MetricTracker $metricTracker = null
+    ): self
     {
-        return new self($metricTracker);
+        return new self($masterRepository, $metricTracker);
     }
 
     /**
@@ -28,7 +33,7 @@ readonly class StoreEntitiesPipe
      */
     public function handle(Collection $entities, Closure $next): mixed
     {
-        (new EntityRepository($this->metricTracker))->storeMany($entities);
+        (new EntityRepository($this->masterRepository, $this->metricTracker))->storeOrUpdateMany($entities);
 
         return $next($entities);
     }

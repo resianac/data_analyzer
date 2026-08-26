@@ -5,6 +5,7 @@ namespace App\Services\Sources\Clients\Enter\Adapters;
 use App\Services\Sources\Clients\Enter\Data\EnterData;
 use App\Services\Sources\Contracts\AdapterInterface;
 use App\Services\Sources\Data\EntityData;
+use App\Services\Sources\Data\SourceDataAttributes\ProductAttributes;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\SourceClientType;
 
@@ -18,7 +19,16 @@ class EnterDataAdapter implements AdapterInterface
             "title" => $data->title,
             "source" => SourceClientType::ENTER,
             "filter_type" => $filter,
-            "data" => $data->toArray(),
+            "data" => (new ProductAttributes(
+                price: $data->price,
+                old_price: null,
+                discount: $data->discount,
+                currency: $data->currency,
+                brand: $data->brand,
+                is_out_of_stock: $data->out_of_stock !== null,
+                url: $data->url,
+                raw: ['variant' => $data->variant]
+            ))->toArray(),
         ]);
     }
 }

@@ -7,11 +7,13 @@ use App\Services\Sources\Data\EntityData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 readonly class EntityRepository
 {
     public function __construct(
+        private EntityMasterRepository $masterRepository,
         private ?MetricTracker $metricTracker = null
     ) {}
 
@@ -63,28 +65,52 @@ readonly class EntityRepository
      * @return void
      * @throws Throwable
      */
-    public function storeMany(Collection $entities): void
+    public function storeOrUpdateMany(Collection $entities): void
     {
-        DB::transaction(function () use ($entities) {
-            foreach ($entities as $data) {
-                $entityModel = Entity::where('external_id', $data->external_id)
-                    ->where('source', $data->source)
-                    ->first();
+        foreach ($entities as $data) {
+            try {
+                $this->storeOrUpdateOne($data);
+            } catch (Throwable $e) {
+                Log::channel('sources.error')->error(
+                    "Failed to store entity [external_id={$data->external_id}, source={$data->source->value}]: {$e->getMessage()}",
+                    ['exception' => $e]
+                );
 
-                if (!$entityModel) {
-                    $entity = Entity::create($data->toArray());
+                throw $e;
+            }
+        }
+    }
 
-                    $this->metricTracker->trackForByFields($entity);
-                    continue;
-                }
+    /**
+     * @param EntityData $data
+     * @return void
+     * @throws Throwable
+     */
+    public function storeOrUpdateOne(EntityData $data): void
+    {
+        DB::transaction(function () use ($data) {
+            $masterId = $this->masterRepository->resolveFor($data->match_id, $data->title)->id;
+            $data->except('match_id');
 
-                $entityModel->fill($data->toArray());
+            $entityModel = Entity::where('external_id', $data->external_id)
+                ->where('source', $data->source)
+                ->first();
 
-                if ($entityModel->isDirty()) {
-                    $entityModel->save();
+            $attributes = [...$data->toArray(), 'entity_master_id' => $masterId];
 
-                    $this->metricTracker->trackForByFields($entityModel);
-                }
+            if (!$entityModel) {
+                $entity = Entity::create($attributes);
+                $this->metricTracker?->trackForByFields($entity);
+
+                return;
+            }
+
+            $entityModel->fill($attributes);
+
+            if ($entityModel->isDirty()) {
+                $entityModel->save();
+
+                $this->metricTracker?->trackForByFields($entityModel);
             }
         });
     }
