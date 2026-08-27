@@ -1,19 +1,28 @@
 <script setup>
 import { dashboard } from '@/routes';
 import { Head } from '@inertiajs/vue3';
-import PlaceholderPattern from '../components/utils/skeleton/PlaceholderPattern.vue';
 import AppLayout from "@/layouts/AppLayout.vue";
+import PlaceholderPattern from "@/components/utils/skeleton/PlaceholderPattern.vue";
+
+const props = defineProps({
+    entities: {
+        type: Object,
+        required: true
+    }
+})
+
+console.log(props.entities)
 
 const breadcrumbs = [
     {
-        title: 'Dashboard',
+        title: 'Catalog',
         href: dashboard().url,
     },
 ];
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head><title>Catalog</title></Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div

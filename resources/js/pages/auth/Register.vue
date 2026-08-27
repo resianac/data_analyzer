@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import TextLink from '@/components/TextLink.vue';
+import InputError from '@/components/utils/feedback/InputError.vue';
+import TextLink from '@/components/utils/typography/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
