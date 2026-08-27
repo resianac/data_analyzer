@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import AppLogo from '@/components/AppLogo.vue';
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import AppLogo from '@/components/partials/layout/app/AppLogo.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,27 +15,19 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from '@/components/ui/sheet';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
-import UserMenuContent from '@/components/UserMenuContent.vue';
+import UserMenuContent from '@/components/partials/layout/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { LayoutGrid, Menu, Search, X, ChevronRight, Home } from 'lucide-vue-next';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
+import InputGroup from "@/components/ui/input-group/InputGroup.vue";
+import InputGroupInput from "@/components/ui/input-group/InputGroupInput.vue";
+import InputGroupAddon from "@/components/ui/input-group/InputGroupAddon.vue";
+import KbdGroup from "@/components/ui/kbd/KbdGroup.vue";
+import Kbd from "@/components/ui/kbd/Kbd.vue";
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -48,6 +40,46 @@ const props = withDefaults(defineProps<Props>(), {
 const page = usePage();
 const auth = computed(() => page.props.auth);
 
+const searchQuery = ref('');
+const isSearchOpen = ref(false);
+const searchInput = ref<HTMLInputElement | null>(null);
+
+const performSearch = () => {
+    // if (searchQuery.value.trim()) {
+        // Используйте Inertia router или window.location
+        // window.location.href = `/search?q=${encodeURIComponent(searchQuery.value)}`;
+        // Или через Inertia:
+        // router.get('/search', { q: searchQuery.value });
+    // }
+};
+
+const openSearch = () => {
+    isSearchOpen.value = true;
+    setTimeout(() => {
+        searchInput.value?.focus();
+    }, 100);
+};
+
+const closeSearch = () => {
+    isSearchOpen.value = false;
+    searchQuery.value = '';
+};
+
+const handleKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') performSearch();
+    if (e.key === 'Escape') closeSearch();
+};
+
+const handleGlobalKeydown = (e: KeyboardEvent) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearch();
+    }
+};
+
+onMounted(() => { document.addEventListener('keydown', handleGlobalKeydown); });
+onUnmounted(() => { document.removeEventListener('keydown', handleGlobalKeydown); });
+
 const isCurrentRoute = computed(
     () => (url: NonNullable<InertiaLinkProps['href']>) =>
         urlIsActive(url, page.url),
@@ -56,206 +88,114 @@ const isCurrentRoute = computed(
 const activeItemStyles = computed(
     () => (url: NonNullable<InertiaLinkProps['href']>) =>
         isCurrentRoute.value(toUrl(url))
-            ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
-            : '',
+            ? 'bg-primary/10 text-primary font-medium'
+            : 'text-foreground/70 hover:text-foreground hover:bg-muted/50',
 );
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Catalog',
         href: dashboard(),
         icon: LayoutGrid,
-    },
-];
-
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
     },
 ];
 </script>
 
 <template>
-    <div>
-        <div class="border-b border-sidebar-border/80">
-            <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
-                <!-- Mobile Menu -->
-                <div class="lg:hidden">
-                    <Sheet>
-                        <SheetTrigger :as-child="true">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                class="mr-2 h-9 w-9"
-                            >
-                                <Menu class="h-5 w-5" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" class="w-[300px] p-6">
-                            <SheetTitle class="sr-only"
-                                >Navigation Menu</SheetTitle
-                            >
-                            <SheetHeader class="flex justify-start text-left">
-                                <AppLogoIcon
-                                    class="size-6 fill-current text-black dark:text-white"
-                                />
-                            </SheetHeader>
-                            <div
-                                class="flex h-full flex-1 flex-col justify-between space-y-4 py-6"
-                            >
-                                <nav class="-mx-3 space-y-1">
+    <header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div class="mx-auto max-w-7xl px-4">
+            <div class="flex h-16 items-center justify-between gap-4">
+                <div class="flex items-center gap-6">
+                    <Link :href="dashboard()" class="shrink-0 flex items-center gap-x-2">
+                        <AppLogo />
+                    </Link>
+
+                    <div class="hidden lg:flex h-full">
+                        <NavigationMenu class="flex h-full items-stretch">
+                            <NavigationMenuList class="flex h-full items-stretch space-x-1">
+                                <NavigationMenuItem
+                                    v-for="(item, index) in mainNavItems"
+                                    :key="index"
+                                    class="relative flex h-full items-center"
+                                >
                                     <Link
-                                        v-for="item in mainNavItems"
-                                        :key="item.title"
+                                        :class="[
+                                            navigationMenuTriggerStyle(),
+                                            activeItemStyles(item.href),
+                                            'h-9 cursor-pointer px-4 rounded-lg text-sm font-medium transition-all',
+                                        ]"
                                         :href="item.href"
-                                        class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-                                        :class="activeItemStyles(item.href)"
                                     >
                                         <component
                                             v-if="item.icon"
                                             :is="item.icon"
-                                            class="h-5 w-5"
+                                            class="mr-2 h-4 w-4"
                                         />
                                         {{ item.title }}
                                     </Link>
-                                </nav>
-                                <div class="flex flex-col space-y-4">
-                                    <a
-                                        v-for="item in rightNavItems"
-                                        :key="item.title"
-                                        :href="toUrl(item.href)"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="flex items-center space-x-2 text-sm font-medium"
-                                    >
-                                        <component
-                                            v-if="item.icon"
-                                            :is="item.icon"
-                                            class="h-5 w-5"
-                                        />
-                                        <span>{{ item.title }}</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
 
-                <Link :href="dashboard()" class="flex items-center gap-x-2">
-                    <AppLogo />
-                </Link>
-
-                <!-- Desktop Menu -->
-                <div class="hidden h-full lg:flex lg:flex-1">
-                    <NavigationMenu class="ml-10 flex h-full items-stretch">
-                        <NavigationMenuList
-                            class="flex h-full items-stretch space-x-2"
-                        >
-                            <NavigationMenuItem
-                                v-for="(item, index) in mainNavItems"
-                                :key="index"
-                                class="relative flex h-full items-center"
-                            >
-                                <Link
-                                    :class="[
-                                        navigationMenuTriggerStyle(),
-                                        activeItemStyles(item.href),
-                                        'h-9 cursor-pointer px-3',
-                                    ]"
-                                    :href="item.href"
-                                >
-                                    <component
-                                        v-if="item.icon"
-                                        :is="item.icon"
-                                        class="mr-2 h-4 w-4"
-                                    />
-                                    {{ item.title }}
-                                </Link>
-                                <div
-                                    v-if="isCurrentRoute(item.href)"
-                                    class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
-                                ></div>
-                            </NavigationMenuItem>
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                </div>
-
-                <div class="ml-auto flex items-center space-x-2">
-                    <div class="relative flex items-center space-x-1">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            class="group h-9 w-9 cursor-pointer"
-                        >
-                            <Search
-                                class="size-5 opacity-80 group-hover:opacity-100"
-                            />
-                        </Button>
-
-                        <div class="hidden space-x-1 lg:flex">
-                            <template
-                                v-for="item in rightNavItems"
-                                :key="item.title"
-                            >
-                                <TooltipProvider :delay-duration="0">
-                                    <Tooltip>
-                                        <TooltipTrigger>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                as-child
-                                                class="group h-9 w-9 cursor-pointer"
-                                            >
-                                                <a
-                                                    :href="toUrl(item.href)"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    <span class="sr-only">{{
-                                                        item.title
-                                                    }}</span>
-                                                    <component
-                                                        :is="item.icon"
-                                                        class="size-5 opacity-80 group-hover:opacity-100"
-                                                    />
-                                                </a>
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>{{ item.title }}</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </template>
-                        </div>
+                                    <div
+                                        v-if="isCurrentRoute(item.href)"
+                                        class="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 rounded-full bg-primary"
+                                    ></div>
+                                </NavigationMenuItem>
+                            </NavigationMenuList>
+                        </NavigationMenu>
                     </div>
+                </div>
+
+                <!-- Поиск (десктоп) -->
+                <div class="hidden md:flex flex-1 max-w-xl mx-4 relative">
+                    <div class="relative w-full">
+                        <InputGroup>
+                            <InputGroupInput
+                                ref="searchInput"
+                                v-model="searchQuery"
+                                placeholder="Search..."
+                                @keydown="handleKeydown"
+                            />
+                            <InputGroupAddon>
+                                <Search />
+                            </InputGroupAddon>
+                            <InputGroupAddon align="inline-end">
+                                <KbdGroup>
+                                    <Kbd>Ctrl</Kbd>
+                                    <span>+</span>
+                                    <Kbd>K</Kbd>
+                                </KbdGroup>
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1">
+                    <!-- Кнопка поиска (мобильная) -->
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        class="md:hidden h-9 w-9 text-muted-foreground hover:text-foreground"
+                        @click="openSearch"
+                    >
+                        <Search class="h-5 w-5" />
+                    </Button>
 
                     <DropdownMenu>
-                        <DropdownMenuTrigger :as-child="true">
+                        <DropdownMenuTrigger as-child>
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                class="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
+                                class="relative h-9 w-9 rounded-full p-0 hover:bg-muted"
                             >
-                                <Avatar
-                                    class="size-8 overflow-hidden rounded-full"
-                                >
+                                <Avatar class="h-8 w-8">
                                     <AvatarImage
-                                        v-if="auth.user.avatar"
+                                        v-if="auth.user?.avatar"
                                         :src="auth.user.avatar"
                                         :alt="auth.user.name"
                                     />
                                     <AvatarFallback
-                                        class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
+                                        class="bg-muted text-muted-foreground text-xs font-medium"
                                     >
-                                        {{ getInitials(auth.user?.name) }}
+                                        {{ auth.user ? getInitials(auth.user.name) : 'Войти' }}
                                     </AvatarFallback>
                                 </Avatar>
                             </Button>
@@ -266,17 +206,45 @@ const rightNavItems: NavItem[] = [
                     </DropdownMenu>
                 </div>
             </div>
+
+            <div
+                v-if="isSearchOpen"
+                class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm md:hidden"
+                @click.self="closeSearch"
+            >
+                <div class="container max-w-7xl mx-auto px-4 pt-4">
+                    <div class="flex items-center gap-2">
+                        <div class="relative flex-1">
+                            <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                            <input
+                                ref="searchInput"
+                                v-model="searchQuery"
+                                type="text"
+                                placeholder="Поиск..."
+                                class="w-full h-12 rounded-lg border border-input bg-background pl-9 pr-4 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                @keydown="handleKeydown"
+                                autofocus
+                            />
+                        </div>
+                        <Button variant="ghost" size="icon" @click="closeSearch">
+                            <X class="h-5 w-5" />
+                        </Button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div
-            v-if="props.breadcrumbs.length > 1"
-            class="flex w-full border-b border-sidebar-border/70"
+            v-if="props.breadcrumbs && props.breadcrumbs.length > 1"
+            class="border-b border-border/40 bg-gradient-to-r from-muted/5 via-muted/10 to-muted/5"
         >
-            <div
-                class="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl"
-            >
-                <Breadcrumbs :breadcrumbs="breadcrumbs" />
+            <div class="mx-auto max-w-7xl px-4">
+                <div class="flex h-10 items-center gap-1 text-sm">
+                    <ChevronRight class="h-3.5 w-3.5 text-muted-foreground/40" />
+
+                    <Breadcrumbs :breadcrumbs="props.breadcrumbs" />
+                </div>
             </div>
         </div>
-    </div>
+    </header>
 </template>
