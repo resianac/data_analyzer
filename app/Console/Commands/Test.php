@@ -36,8 +36,8 @@ class Test extends Command
      */
     public function handle()
     {
-//        OrchestrateEnterSearchAction::all()->dispatchSync();
-        OrchestrateUltraSearchAction::all()->dispatchSync();
+        OrchestrateEnterSearchAction::all()->dispatchSync();
+//        OrchestrateUltraSearchAction::all()->dispatchSync();
 
         dd('test');
     }

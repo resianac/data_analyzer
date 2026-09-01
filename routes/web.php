@@ -1,10 +1,9 @@
 <?php
 
+use App\Http\Controllers\EntityController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
-
-Route::any('{any}', fn () => abort(404))->where('any', '.*');
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -17,3 +16,8 @@ Route::get('dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/settings.php';
+
+Route::resource('catalog', EntityController::class);
+
+
+//Route::any('{any}', fn () => abort(404))->where('any', '.*');
