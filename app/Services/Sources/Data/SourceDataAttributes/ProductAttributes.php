@@ -19,7 +19,6 @@ class ProductAttributes extends Data
         public ?string $brand,
         public bool $is_out_of_stock,
         public ?string $url,
-        public ?string $image,
         public array $raw = [],
     ) {}
 }

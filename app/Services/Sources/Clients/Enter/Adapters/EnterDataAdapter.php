@@ -21,7 +21,7 @@ class EnterDataAdapter implements AdapterInterface
             "filter_type" => $filter,
             "data" => (new ProductAttributes(
                 price: $data->price,
-                old_price: null,
+                old_price: $data->old_price,
                 discount: $data->discount,
                 currency: $data->currency,
                 brand: $data->brand,

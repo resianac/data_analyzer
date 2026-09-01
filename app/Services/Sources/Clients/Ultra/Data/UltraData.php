@@ -6,7 +6,7 @@ use App\Data\EntityData;
 use App\Services\Sources\Clients\Ultra\Adapters\UltraDataAdapter;
 use App\Services\Sources\Clients\Ultra\Enums\UltraSearchParam;
 use App\Services\Sources\Clients\Ultra\Normalizers\UltraNormalizerFactory;
-use App\Services\Sources\Data\Casts\PriceCast;
+use App\Services\Sources\Data\Casts\NumberCast;
 use App\Services\Sources\Enums\EntityFilter;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
@@ -17,9 +17,9 @@ class UltraData extends Data
         public string $external_id,
         public string $title,
 
-        #[WithCast(PriceCast::class)]
+        #[WithCast(NumberCast::class)]
         public float $price,
-        #[WithCast(PriceCast::class)]
+        #[WithCast(NumberCast::class)]
         public ?float $old_price,
 
         public ?int $discount,

@@ -4,7 +4,7 @@ namespace App\Services\Sources\Data\Casts;
 
 use Spatie\LaravelData\Casts\Cast;
 
-class PriceCast implements Cast
+class NumberCast implements Cast
 {
     public function cast($property, mixed $value, array $properties, $context): ?float
     {

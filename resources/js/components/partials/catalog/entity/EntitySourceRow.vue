@@ -31,11 +31,18 @@ const getDiscountPercent = computed(() => {
     return Math.round((1 - data.price / data.old_price) * 100);
 });
 
-const formatPrice = (price) => {
+const formatPrice = (price, showCurrency = true) => {
     if (!price) return '—';
+
     return new Intl.NumberFormat('ru-RU', {
-        style: 'currency',
-        currency: props.currency || 'MDL',
+        ...(showCurrency
+            ? {
+                style: 'currency',
+                currency: props.currency || 'MDL',
+            }
+            : {
+                style: 'decimal',
+            }),
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
     }).format(price);
@@ -76,7 +83,7 @@ const { label, logo } = useSource(props.entity.source);
         </a>
 
         <!-- Price + badges -->
-        <div class="flex items-center gap-2 flex-shrink-0">
+        <div class="flex items-center gap-1 flex-shrink-0">
             <Badge
                 v-if="hasDiscount"
                 variant="outline"
@@ -89,16 +96,29 @@ const { label, logo } = useSource(props.entity.source);
                 <PackageX class="text-destructive size-4" />
             </div>
 
-            <span
-                class="text-sm font-semibold"
-                :class="{
-                    'text-primary': isBestPrice && !isOutOfStock,
-                    'text-muted-foreground': !isBestPrice && isOutOfStock,
-                    'text-foreground': !isBestPrice && !isOutOfStock,
-                }"
-            >
-                {{ formatPrice(entity.data?.price) }}
-            </span>
+            <div
+                v-if="hasDiscount && !isOutOfStock"
+                class="w-px h-4 bg-border"
+            />
+
+            <div class="flex items-center gap-1">
+                <span
+                    v-if="entity.data?.old_price && !isOutOfStock"
+                    class="text-[10px] text-muted-foreground line-through"
+                >
+                    {{ formatPrice(entity.data?.old_price, false) }}
+                </span>
+                <span
+                    class="text-sm font-bold"
+                    :class="{
+                        'text-primary': isBestPrice && !isOutOfStock,
+                        'text-muted-foreground': isOutOfStock,
+                        'text-foreground': !isBestPrice && !isOutOfStock,
+                    }"
+                >
+                    {{ formatPrice(entity.data?.price) }}
+                </span>
+            </div>
         </div>
     </div>
 </template>
