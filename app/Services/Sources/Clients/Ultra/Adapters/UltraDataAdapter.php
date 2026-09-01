@@ -2,9 +2,9 @@
 
 namespace App\Services\Sources\Clients\Ultra\Adapters;
 
+use App\Data\EntityData;
 use App\Services\Sources\Clients\Ultra\Data\UltraData;
 use App\Services\Sources\Contracts\AdapterInterface;
-use App\Services\Sources\Data\EntityData;
 use App\Services\Sources\Data\SourceDataAttributes\ProductAttributes;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\SourceClientType;

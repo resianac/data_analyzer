@@ -82,7 +82,7 @@ onUnmounted(() => { document.removeEventListener('keydown', handleGlobalKeydown)
 
 const isCurrentRoute = computed(
     () => (url: NonNullable<InertiaLinkProps['href']>) =>
-        urlIsActive(url, page.url),
+        urlIsActive(page.url),
 );
 
 const activeItemStyles = computed(
@@ -144,7 +144,6 @@ const mainNavItems: NavItem[] = [
                     </div>
                 </div>
 
-                <!-- Поиск (десктоп) -->
                 <div class="hidden md:flex flex-1 max-w-xl mx-4 relative">
                     <div class="relative w-full">
                         <InputGroup>
@@ -168,8 +167,7 @@ const mainNavItems: NavItem[] = [
                     </div>
                 </div>
 
-                <div class="flex items-center gap-1">
-                    <!-- Кнопка поиска (мобильная) -->
+                <div v-if="auth.user" class="flex items-center gap-1">
                     <Button
                         variant="ghost"
                         size="icon"
@@ -201,7 +199,7 @@ const mainNavItems: NavItem[] = [
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" />
+                            <UserMenuContent v-if="auth.user" :user="auth.user" />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

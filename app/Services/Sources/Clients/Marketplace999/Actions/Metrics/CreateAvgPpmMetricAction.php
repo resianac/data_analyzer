@@ -2,9 +2,9 @@
 
 namespace App\Services\Sources\Clients\Marketplace999\Actions\Metrics;
 
+use App\Data\MetricData;
 use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetAverageValueAction;
-use App\Services\Sources\Data\MetricData;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\MetricKey;
 use App\Services\Sources\Enums\SourceClientType;

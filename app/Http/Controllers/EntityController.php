@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\EntityData;
+use App\Data\EntityMasterData;
 use App\Models\Entity;
-use App\Services\Sources\Data\EntityData;
+use App\Models\EntityMaster;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\LaravelData\PaginatedDataCollection;
@@ -15,9 +17,15 @@ class EntityController extends Controller
      */
     public function index()
     {
+        $masters = EntityMaster::with(['entities' => function ($query) {
+            $query->orderBy('data->is_out_of_stock');
+        }])
+            ->has('entities', '>', 1)
+            ->paginate();
+
         return Inertia::render('entity/Index', [
-             'entities' => EntityData::collect(
-                 Entity::orderBy('data->is_out_of_stock')->paginate(),
+             'masters' => EntityMasterData::collect(
+                 $masters,
                  PaginatedDataCollection::class
              )
         ]);

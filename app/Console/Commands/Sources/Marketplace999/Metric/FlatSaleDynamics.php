@@ -3,10 +3,8 @@
 namespace App\Console\Commands\Sources\Marketplace999\Metric;
 
 use App\Jobs\SendMessageToTelegram;
-use App\Models\Metric;
 use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\CreateFlatSaleDynamicsMetricAction;
-use App\Services\Sources\Data\MetricData;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\MetricFilter;
 use App\Services\Sources\Enums\MetricKey;

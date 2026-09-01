@@ -2,8 +2,8 @@
 
 namespace App\Services\Pipelines\EntityProcessing;
 
+use App\Data\EntityData;
 use App\Services\Repository\EntityRepository;
-use App\Services\Sources\Data\EntityData;
 use Closure;
 use Illuminate\Support\Collection;
 

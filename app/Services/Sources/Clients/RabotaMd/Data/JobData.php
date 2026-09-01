@@ -2,18 +2,11 @@
 
 namespace App\Services\Sources\Clients\RabotaMd\Data;
 
-use App\Services\Sources\Clients\Marketplace999\Adapters\FlatDataAdapter;
-use App\Services\Sources\Clients\Marketplace999\Cast\MarketplaceDateCast;
+use App\Data\EntityData;
 use App\Services\Sources\Clients\RabotaMd\Adapters\JobDataAdapter;
-use App\Services\Sources\Clients\RabotaMd\RabotaMdClient;
-use App\Services\Sources\Configs\Marketplace999Config;
 use App\Services\Sources\Configs\RabotaMdConfig;
-use App\Services\Sources\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Spatie\LaravelData\Attributes\MapInputName;
-use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
 class JobData extends Data

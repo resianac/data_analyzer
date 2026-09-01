@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Services\Sources\Data;
+namespace App\Data;
 
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\MetricKey;
 use App\Services\Sources\Enums\SourceClientType;
-use Carbon\Carbon;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
-use Spatie\SchemalessAttributes\SchemalessAttributes;
 
 class MetricData extends Data
 {

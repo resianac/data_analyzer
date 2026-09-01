@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Enter\Data;
 
+use App\Data\EntityData;
 use App\Services\Sources\Clients\Enter\Adapters\EnterDataAdapter;
 use App\Services\Sources\Clients\Enter\Enums\EnterSearchParam;
 use App\Services\Sources\Clients\Enter\Normalizers\EnterNormalizerFactory;
-use App\Services\Sources\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;

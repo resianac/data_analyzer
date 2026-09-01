@@ -12,5 +12,5 @@ export function toUrl(href: string): string {
 }
 
 export function urlIsActive(url: any): boolean {
-    return usePage().url === url.url
+    return usePage().url === url
 }

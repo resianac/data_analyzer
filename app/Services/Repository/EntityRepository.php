@@ -2,8 +2,8 @@
 
 namespace App\Services\Repository;
 
+use App\Data\EntityData;
 use App\Models\Entity;
-use App\Services\Sources\Data\EntityData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;

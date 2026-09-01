@@ -18,7 +18,8 @@
     "utils": "@/lib/utils",
     "ui": "@/components/ui",
     "lib": "@/lib",
-    "composables": "@/composables"
+    "composables": "@/composables",
+    "constants": "@/constants"
   },
   "registries": {}
 }

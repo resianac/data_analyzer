@@ -1,22 +1,23 @@
 <script setup>
-import { dashboard } from '@/routes';
 import { Head } from '@inertiajs/vue3';
 import AppLayout from "@/layouts/AppLayout.vue";
-import PlaceholderPattern from "@/components/utils/skeleton/PlaceholderPattern.vue";
+import catalog from '@/routes/catalog/index.js';
+import EntityMasterGrid from '@/components/partials/catalog/list/EntityMasterGrid.vue';
 
 const props = defineProps({
-    entities: {
+    masters: {
         type: Object,
-        required: true
+        required: true,
+        default: () => []
     }
 })
 
-console.log(props.entities)
+console.log(props.masters);
 
 const breadcrumbs = [
     {
         title: 'Catalog',
-        href: dashboard().url,
+        href: catalog.index().url,
     },
 ];
 </script>
@@ -25,31 +26,8 @@ const breadcrumbs = [
     <Head><title>Catalog</title></Head>
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div
-            class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-        >
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                >
-                    <PlaceholderPattern />
-                </div>
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                >
-                    <PlaceholderPattern />
-                </div>
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                >
-                    <PlaceholderPattern />
-                </div>
-            </div>
-            <div
-                class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
-            </div>
+        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <EntityMasterGrid :masters="masters.data" />
         </div>
     </AppLayout>
 </template>

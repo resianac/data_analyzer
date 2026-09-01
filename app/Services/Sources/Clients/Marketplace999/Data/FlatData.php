@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Marketplace999\Data;
 
+use App\Data\EntityData;
 use App\Services\Sources\Clients\Marketplace999\Adapters\FlatDataAdapter;
 use App\Services\Sources\Clients\Marketplace999\Cast\MarketplaceDateCast;
 use App\Services\Sources\Configs\Marketplace999Config;
-use App\Services\Sources\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
 use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\MapInputName;

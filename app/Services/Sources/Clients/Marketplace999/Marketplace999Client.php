@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Marketplace999;
 
+use App\Data\EntityData;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Marketplace999\Data\FlastData;
 use App\Services\Sources\Clients\Marketplace999\Data\FlatData;
-use App\Services\Sources\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\SourceClientType;
 use App\Services\Sources\Filters\Factories\VariableFactory;

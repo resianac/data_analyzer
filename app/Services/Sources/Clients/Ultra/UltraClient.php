@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Ultra;
 
+use App\Data\EntityData;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Ultra\Data\UltraData;
 use App\Services\Sources\Clients\Ultra\Enums\UltraSearchParam;
-use App\Services\Sources\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\SourceClientType;
 use App\Services\Sources\Filters\Factories\VariableFactory;

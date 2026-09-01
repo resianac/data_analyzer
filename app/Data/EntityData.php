@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Sources\Data;
+namespace App\Data;
 
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\SourceClientType;

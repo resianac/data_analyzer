@@ -2,14 +2,8 @@
 
 namespace App\Services\Repository;
 
-use App\Models\Entity;
+use App\Data\EntityMasterData;
 use App\Models\EntityMaster;
-use App\Services\Sources\Data\EntityData;
-use App\Services\Sources\Data\EntityMasterData;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
 readonly class EntityMasterRepository
 {

@@ -2,9 +2,9 @@
 
 namespace App\Services\Repository;
 
+use App\Data\MetricData;
 use App\Models\Entity;
 use App\Models\Metric;
-use App\Services\Sources\Data\MetricData;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\MetricKey;
 use App\Services\Sources\Enums\SourceClientType;

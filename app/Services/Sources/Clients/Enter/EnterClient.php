@@ -2,11 +2,10 @@
 
 namespace App\Services\Sources\Clients\Enter;
 
+use App\Data\EntityData;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Enter\Data\EnterData;
 use App\Services\Sources\Clients\Enter\Enums\EnterSearchParam;
-use App\Services\Sources\Clients\RabotaMd\Data\JobData;
-use App\Services\Sources\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\SourceClientType;
 use App\Services\Sources\Filters\Factories\VariableFactory;
