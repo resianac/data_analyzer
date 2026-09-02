@@ -10,6 +10,7 @@ class EnterNormalizerFactory
 {
     public static array $map = [
         EnterSearchParam::TV->value => EnterTvMatchNormalizer::class,
+        EnterSearchParam::FRIDGE->value => EnterFridgeMatchNormalizer::class,
     ];
 
     public static function make(EnterSearchParam $searchParam): NormalizerInterface

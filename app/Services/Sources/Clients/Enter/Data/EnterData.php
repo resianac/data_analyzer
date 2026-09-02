@@ -34,6 +34,8 @@ class EnterData extends Data
         public ?float $discount,
         #[WithCast(NumberCast::class)]
         public ?float $old_price,
+
+        public ?string $image,
         public ?string $out_of_stock,
         public ?string $url,
     ) {

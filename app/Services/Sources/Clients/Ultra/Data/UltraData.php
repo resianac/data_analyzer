@@ -25,6 +25,7 @@ class UltraData extends Data
         public ?int $discount,
         public string $variant,
 
+        public ?string $image,
         public ?string $out_of_stock,
         public ?string $url,
     ) {

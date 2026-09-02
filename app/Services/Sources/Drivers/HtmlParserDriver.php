@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\NoReturn;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Throwable;
@@ -142,7 +143,15 @@ class HtmlParserDriver extends BaseDriver
                 $node = $nodes->first();
                 $value = null;
 
-                if (isset($config['attribute'])) {
+                if (isset($config['attributes'])) {
+                    foreach ($config['attributes'] as $attribute) {
+                        $value = $node->attr($attribute);
+
+                        if ($value) {
+                            break;
+                        }
+                    }
+                } else if (isset($config['attribute'])) {
                     $value = $node->attr($config['attribute']);
                 } else {
                     $value = trim($node->text());
@@ -162,5 +171,20 @@ class HtmlParserDriver extends BaseDriver
             'Invalid selector config in parseElement. Given: %s',
             is_array($config) ? json_encode($config) : gettype($config)
         ));
+    }
+
+    #[NoReturn] private function ddImages(): void
+    {
+        dd(
+            $this->crawler
+                ->filter('img')
+                ->each(fn (Crawler $node) => [
+                    'src' => $node->attr('src'),
+                    'data-src' => $node->attr('data-src'),
+                    'srcset' => $node->attr('srcset'),
+                    'alt' => $node->attr('alt'),
+                    'class' => $node->attr('class'),
+                ])
+        );
     }
 }

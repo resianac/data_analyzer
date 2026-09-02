@@ -26,8 +26,11 @@ class UltraEntityVariables implements HtmlVariablesInterface
                         "attribute" => "href"
                     ],
                     "image" => [
-                        "selector" => ".product-card a.product-card__link img",
-                        "attribute" => "src"
+                        "selector" => ".product-card img.product-card__image",
+                        "attributes" => [
+                            "data-lazy-src",
+                            "src",
+                        ],
                     ],
                     "out_of_stock" => '.product-card .product-card__out-of-stock',
                 ],

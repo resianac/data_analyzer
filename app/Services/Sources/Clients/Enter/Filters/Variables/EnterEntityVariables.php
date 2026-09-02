@@ -21,6 +21,10 @@ class EnterEntityVariables implements HtmlVariablesInterface
                         "selector" => ".product-item .card-body a.stretched-link",
                         "attribute" => "href"
                     ],
+                    "image" => [
+                        "selector" => ".product-item .product-img img",
+                        "attribute" => "data-src"
+                    ],
                     "old_price" => ".product-item .price-old-with-discount div:nth-child(1)",
                     "discount" => ".product-item .price-old-with-discount div:nth-child(2) div:nth-child(1)",
                     "out_of_stock" => '.product-item.out-of-stock',

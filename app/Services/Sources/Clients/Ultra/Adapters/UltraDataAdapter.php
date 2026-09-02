@@ -27,6 +27,7 @@ class UltraDataAdapter implements AdapterInterface
                brand: null,
                is_out_of_stock: $data->out_of_stock !== null,
                url: $data->url,
+               image: $data->image,
                raw: ['variant' => $data->variant]
            ))->toArray(),
        ]);

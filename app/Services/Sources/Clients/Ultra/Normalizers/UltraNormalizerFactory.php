@@ -10,6 +10,7 @@ class UltraNormalizerFactory
 {
     public static array $map = [
          UltraSearchParam::TV->value => UltraTvMatchNormalizer::class,
+         UltraSearchParam::FRIDGE->value => UltraFridgeMatchNormalizer::class,
     ];
 
     public static function make(UltraSearchParam $searchParam): NormalizerInterface

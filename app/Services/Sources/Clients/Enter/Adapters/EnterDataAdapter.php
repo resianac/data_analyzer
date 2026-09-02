@@ -27,6 +27,7 @@ class EnterDataAdapter implements AdapterInterface
                 brand: $data->brand,
                 is_out_of_stock: $data->out_of_stock !== null,
                 url: $data->url,
+                image: $data->image,
                 raw: ['variant' => $data->variant]
             ))->toArray(),
         ]);
