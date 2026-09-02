@@ -1,10 +1,12 @@
-<!-- resources/js/components/entity/ProductCard.vue -->
 <script setup>
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { ExternalLink, Box, PackageX } from 'lucide-vue-next';
 import { useSource } from '@/composables/useSource.js';
+import { Link } from '@inertiajs/vue3';
 import EntitySourceRow from '@/components/partials/catalog/entity/EntitySourceRow.vue';
+import catalog from '@/routes/catalog/index.js';
+import { computed } from 'vue';
 
 const props = defineProps({
     master: {
@@ -15,6 +17,8 @@ const props = defineProps({
 
 const entities = props.master.entities || [];
 const currency = entities[0]?.data?.currency || 'MDL';
+
+const masterImage = computed(() => entities.find(i => i.data.image)?.data.image ?? null)
 
 const sortedEntities = [...entities].sort((a, b) => {
     const labelA = useSource(a.source).label.value || a.source;
@@ -31,14 +35,17 @@ const bestPrice = sortedEntities.length > 0
     <Card class="overflow-hidden border-border/40 hover:border-primary/30 hover:shadow-md transition-all gap-2 pb-0">
         <div class="relative aspect-[3/2] bg-muted/20 overflow-hidden">
             <div class="flex h-full w-full items-center justify-center text-muted-foreground">
-                <Box class="size-10" />
+                <img v-if="masterImage" :src="masterImage" alt="product image">
+                <Box v-else class="size-10" />
             </div>
         </div>
 
         <CardContent class="p-3">
-            <div class="line-clamp-2 text-sm font-medium leading-tight min-h-[2.5rem]">
-                {{ master.title || 'Untitled' }}
-            </div>
+            <Link :href="catalog.show(master.match_id)">
+                <div class="line-clamp-2 text-sm font-medium leading-tight min-h-[2.5rem]">
+                    {{ master.title || 'Untitled' }}
+                </div>
+            </Link>
 
             <p v-if="master.category" class="text-xs text-muted-foreground uppercase mt-0.5">
                 {{ master.category }}
