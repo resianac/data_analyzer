@@ -5,6 +5,8 @@ namespace App\Data;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\SourceClientType;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 use Spatie\SchemalessAttributes\SchemalessAttributes;
@@ -18,7 +20,11 @@ class EntityData extends Data
         public string               $title,
         public SourceClientType     $source,
         public EntityFilter         $filter_type,
+
         public SchemalessAttributes|array $data,
+        #[DataCollectionOf(MetricData::class)]
+        public Collection|Optional $metrics,
+
         public Carbon|Optional|null $external_last_update,
         public Carbon|Optional|null $created_at,
         public Carbon|Optional|null $updated_at,

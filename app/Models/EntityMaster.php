@@ -9,6 +9,12 @@ class EntityMaster extends Model
 {
     protected $guarded = [];
 
+
+    public function getRouteKeyName(): string
+    {
+        return 'match_id';
+    }
+
     public function entities(): HasMany
     {
         return $this->hasMany(Entity::class);
