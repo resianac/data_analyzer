@@ -238,8 +238,6 @@ const mainNavItems: NavItem[] = [
         >
             <div class="mx-auto max-w-7xl px-4">
                 <div class="flex h-10 items-center gap-1 text-sm">
-                    <ChevronRight class="h-3.5 w-3.5 text-muted-foreground/40" />
-
                     <Breadcrumbs :breadcrumbs="props.breadcrumbs" />
                 </div>
             </div>

@@ -8,14 +8,14 @@ export const SOURCES = {
         label: 'Ultra',
         logo: '/assets/images/sources/logo/ultra_logo.png',
         website: 'https://www.ultra.md',
-        color: '#0055A4',
+        color: '#02304f',
     },
     enter: {
         id: 'enter',
         label: 'Enter',
         logo: '/assets/images/sources/logo/enter_logo.ico',
         website: 'https://www.enter.md',
-        color: '#00A3E0',
+        color: '#e00061',
     },
 };
 

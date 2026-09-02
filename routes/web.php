@@ -17,7 +17,10 @@ Route::get('dashboard', function () {
 
 require __DIR__.'/settings.php';
 
-Route::resource('catalog', EntityController::class);
+Route::resource('catalog', EntityController::class)
+    ->parameters([
+        'catalog' => 'master',
+    ]);
 
 
 //Route::any('{any}', fn () => abort(404))->where('any', '.*');

@@ -6,11 +6,6 @@ import inertia from '@inertiajs/vite'
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    resolve: {
-        alias: {
-            '@': fileURLToPath(new URL('./resources/js', import.meta.url)),
-        },
-    },
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],

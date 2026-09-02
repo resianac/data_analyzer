@@ -21,7 +21,7 @@ class EntityController extends Controller
             $query->orderBy('data->is_out_of_stock');
         }])
             ->has('entities', '>', 1)
-            ->paginate();
+            ->paginate(100);
 
         return Inertia::render('entity/Index', [
              'masters' => EntityMasterData::collect(
@@ -50,9 +50,15 @@ class EntityController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(EntityMaster $master)
     {
-        //
+        $master->load(['entities' => function ($query) {
+            $query->with('metrics')->orderBy('source');
+        }]);
+
+        return Inertia::render('entity/Show', [
+            'master' => EntityMasterData::from($master),
+        ]);
     }
 
     /**

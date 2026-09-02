@@ -14,3 +14,17 @@ export function toUrl(href: string): string {
 export function urlIsActive(url: any): boolean {
     return usePage().url === url
 }
+
+export function formatPrice(
+    price: number | null | undefined,
+    currency: string = 'MDL',
+): string {
+    if (!price) return '—';
+
+    return new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(price);
+}
