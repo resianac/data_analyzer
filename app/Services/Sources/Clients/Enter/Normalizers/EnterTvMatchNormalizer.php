@@ -11,7 +11,7 @@ use Throwable;
 
 class EnterTvMatchNormalizer extends BaseNormalizer
 {
-    protected array $stopWords = ['телевизор', 'TV'];
+    protected array $stopWords = ['телевизор', 'TV', 'smart'];
 
     public function normalize(Data|EnterData $data): string|null
     {
@@ -21,10 +21,9 @@ class EnterTvMatchNormalizer extends BaseNormalizer
             $diagonal = Str::of($data->variant)
                 ->before('/');
 
-            $tech = Str::of($data->variant)
-                ->betweenFirst('/', '/');
+            $cleanTitle = Str::of($cleanTitle)->replace(" pro ", ' ')->value();
 
-            return Str::of("{$cleanTitle} {$diagonal} {$tech}")
+            return Str::of("{$cleanTitle} {$diagonal}")
                 ->replaceMatches('/[^a-zA-Zа-яА-Я0-9]+/u', ' ')
                 ->squish()
                 ->lower()

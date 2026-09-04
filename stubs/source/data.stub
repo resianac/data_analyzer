@@ -2,7 +2,7 @@
 
 namespace App\Services\Sources\Clients\{{ name }}\Data;
 
-use App\Services\Sources\Data\EntityData;
+use App\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
 use Spatie\LaravelData\Data;
 
@@ -12,8 +12,21 @@ class {{ name }}Data extends Data
         // TODO: entity fields
     ) {}
 
-    public function toGeneral(EntityFilter $filter): EntityData
+    /**
+     * Transform data to general DTO
+     *
+     * @param EntityFilter $filter
+     * @param {{ name }}SearchParam $searchParam
+     * @return EntityData|null
+     */
+    public function toGeneral(EntityFilter $filter, {{ name }}SearchParam $searchParam): ?EntityData
     {
-        // TODO: map to general format EntityData
+        $matchId = {{ name }}NormalizerFactory::make($searchParam)->normalize($this);
+
+        if ($matchId === null) {
+            return null;
+        }
+
+        return {{ name }}DataAdapter::toGeneral($this, $filter, $matchId);
     }
 }

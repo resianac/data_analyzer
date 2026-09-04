@@ -29,6 +29,10 @@ class HtmlParserDriver extends BaseDriver
 
         $this->client = Http::timeout($this->config->get('timeout'))
             ->withHeaders($this->config->get('headers') ?? [])
+            ->withCookies([
+                'PHPSESSID' => '1039a25202e793d1bc0c6b069ec9b52a',
+                'customer_cart_id' => 'dWdtVWN1T3BOUVZWblNYcUt5bG1XUT09',
+            ], 'bomba.md')
             ->baseUrl($this->config->get('base_url'));
     }
 
@@ -122,10 +126,14 @@ class HtmlParserDriver extends BaseDriver
         }
     }
 
-    protected function parseElement(array|string $config, Crawler $crawler = null): array|string|null
+    protected function parseElement(array|string|null $config, Crawler $crawler = null): array|string|null
     {
         if (!$crawler) {
             $crawler = $this->crawler;
+        }
+
+        if (is_null($config)) {
+            return null;
         }
 
         if (is_string($config)) {
@@ -185,6 +193,15 @@ class HtmlParserDriver extends BaseDriver
                     'alt' => $node->attr('alt'),
                     'class' => $node->attr('class'),
                 ])
+        );
+    }
+
+    #[NoReturn] private function ddE(): void
+    {
+        dd(
+            $this->crawler
+                ->filter('.catalog__pill')
+                ->each(fn (Crawler $node) => $node->outerHtml())
         );
     }
 }

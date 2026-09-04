@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Sources\Clients\{{ name }}\Filters\Variables\Html;
+namespace App\Services\Sources\Clients\{{ name }}\Filters\Variables;
 
 use App\Services\Sources\Contracts\Variables\HtmlVariablesInterface;
 
-class {{ name }}HtmlVariables implements HtmlVariablesInterface
+class {{ name }}EntityVariables implements HtmlVariablesInterface
 {
     public static function byItems(): array
     {

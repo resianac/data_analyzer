@@ -4,15 +4,20 @@ namespace App\Services\Sources\Clients\{{ name }}\Adapters;
 
 use App\Services\Sources\Clients\{{ name }}\Data\{{ name }}Data;
 use App\Services\Sources\Contracts\AdapterInterface;
-use App\Services\Sources\Data\EntityData;
+use App\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
 
 class {{ name }}DataAdapter implements AdapterInterface
 {
-   public static function toGeneral({{ name }}Data $data, EntityFilter $filter): EntityData
-   {
-       return EntityData::from([
-
+    public static function toGeneral({{ name }}Data $data, EntityFilter $filter, string $matchId): EntityData
+    {
+        return EntityData::from([
+            "external_id" => $data->external_id,
+            "match_id" => $matchId,
+            "title" => $data->title,
+            "source" => SourceClientType::{{ nameUpper }},
+            "filter_type" => $filter,
+            "data" => []
        ]);
-   }
+    }
 }

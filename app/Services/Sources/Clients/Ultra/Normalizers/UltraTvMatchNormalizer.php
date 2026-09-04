@@ -32,7 +32,8 @@ class UltraTvMatchNormalizer extends BaseNormalizer
                 ->betweenFirst(' ', ' ');
 
             $model = Str::of($cleanTitle)
-                ->after($brand);
+                ->after($brand)
+                ->replace(' pro ', ' ');
 
             if (
                 $diagonal->value() === '' ||
@@ -47,7 +48,7 @@ class UltraTvMatchNormalizer extends BaseNormalizer
                 return null;
             }
 
-            return Str::of("{$brand} {$model} {$diagonal} {$tech}")
+            return Str::of("{$brand} {$model} {$diagonal}")
                 ->replaceMatches('/[^a-zA-Zа-яА-Я0-9]+/u', ' ')
                 ->squish()
                 ->lower()

@@ -8,4 +8,7 @@ enum SourceClientType: string
     case RABOTA_MD = 'rabota_md';
     case ENTER = 'enter';
     case ULTRA = 'ultra';
+    case BOMBA = 'bomba';
+    case CACTUS = 'cactus';
+    case MAXIMUM = 'maximum';
 }

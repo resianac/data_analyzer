@@ -13,58 +13,18 @@ use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Contracts\ConfigInterface;
 use App\Services\Sources\Drivers\HtmlParserDriver;
 use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Support\Actions\BaseSearchProductEntityAction;
 use Illuminate\Pipeline\Pipeline;
 
-class SearchUltraEntitiesAction
+class SearchUltraEntitiesAction extends BaseSearchProductEntityAction
 {
-    private bool $hasNextPage = false;
-    private BaseClient $client;
-    private BaseConfig|ConfigInterface $config;
-
-    public function __construct(
-        private readonly UltraSearchParam $searchParam,
-        private readonly EntityFilter     $filter = EntityFilter::ULTRA_ENTITY,
-    ) {
-        $this->client = new UltraClient(HtmlParserDriver::make());
-        $this->config = $this->client->getConfig();
+    public function __construct(UltraSearchParam $searchParam)
+    {
+        parent::__construct($searchParam, EntityFilter::ULTRA_ENTITY);
     }
 
-    public function handle(): void
+    protected function createClient(): UltraClient
     {
-        foreach ($this->paginate() as $page) {
-            $result = $this->client->search($this->filter, $this->searchParam, $page);
-
-            $this->hasNextPage = $this->client->hasNextPage();
-
-            app(Pipeline::class)
-                ->send($result)
-                ->through([
-                    StoreEntitiesPipe::make(
-                        EntityMasterRepository::makeWithData(
-                            EntityMasterData::from(['category' => strtolower($this->searchParam->name)])
-                        ),
-                        MetricTracker::make($this->config->get('metric_fields'))
-                    ),
-                ])
-                ->thenReturn();
-
-            sleep(rand(
-                $this->config->get('sleep')['min'],
-                $this->config->get('sleep')['max']
-            ));
-        }
-    }
-
-    private function paginate(): iterable
-    {
-        $skip = 1;
-        $isFirstIteration = true;
-
-        while ($isFirstIteration || $this->hasNextPage) {
-            $isFirstIteration = false;
-
-            yield $skip;
-            $skip += $this->config->get('limit');
-        }
+        return new UltraClient(HtmlParserDriver::make());
     }
 }

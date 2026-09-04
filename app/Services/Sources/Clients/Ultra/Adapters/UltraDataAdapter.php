@@ -22,7 +22,7 @@ class UltraDataAdapter implements AdapterInterface
            "data" => (new ProductAttributes(
                price: $data->price,
                old_price: $data->old_price,
-               discount: $data->discount ? (float) $data->discount : null,
+               discount: $data->discount ? (float) abs($data->discount) : 0,
                currency: 'MDL',
                brand: null,
                is_out_of_stock: $data->out_of_stock !== null,

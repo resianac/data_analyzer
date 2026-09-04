@@ -56,7 +56,6 @@ class MakeCommand extends Command
             "{$basePath}/Enums",
             "{$basePath}/Filters/Formatters",
             "{$basePath}/Filters/Variables",
-            "{$basePath}/Filters/Variables/Html",
             "{$basePath}/Jobs",
             "{$basePath}/Normalizers",
         ];
@@ -73,7 +72,7 @@ class MakeCommand extends Command
             "Adapters/{$name}DataAdapter.php"            => 'adapter',
             "Data/{$name}Data.php"                       => 'data',
             "Enums/{$name}SearchParam.php"               => 'param-enum',
-            "Filters/Variables/Html/{$name}EntityVariables.php" => 'html-variables',
+            "Filters/Variables/{$name}EntityVariables.php" => 'html-variables',
             "Normalizers/{$name}NormalizerFactory.php"   => 'normalizer-factory',
             "{$name}Client.php"                          => 'client',
             "{$name}Config.php"                          => 'config',

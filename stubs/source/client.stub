@@ -5,7 +5,7 @@ namespace App\Services\Sources\Clients\{{ name }};
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\{{ name }}\Data\{{ name }}Data;
 use App\Services\Sources\Clients\{{ name }}\Enums\{{ name }}SearchParam;
-use App\Services\Sources\Data\EntityData;
+use App\Data\EntityData;
 use App\Services\Sources\Enums\EntityFilter;
 use App\Services\Sources\Enums\SourceClientType;
 use App\Services\Sources\Filters\Factories\VariableFactory;
@@ -42,6 +42,8 @@ class {{ name }}Client extends BaseClient
         );
 
         return {{ name }}Data::collect($data['entities'], Collection::class)
-            ->map(fn ({{ name }}Data $item) => $item->toGeneral($filter));
+            ->map(fn ({{ name }}Data $item) => $item->toGeneral($filter, $param))
+            ->filter()
+            ->values();
     }
 }

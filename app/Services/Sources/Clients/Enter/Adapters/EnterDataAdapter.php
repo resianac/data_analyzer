@@ -22,7 +22,7 @@ class EnterDataAdapter implements AdapterInterface
             "data" => (new ProductAttributes(
                 price: $data->price,
                 old_price: $data->old_price,
-                discount: $data->discount,
+                discount: abs($data->discount),
                 currency: $data->currency,
                 brand: $data->brand,
                 is_out_of_stock: $data->out_of_stock !== null,
