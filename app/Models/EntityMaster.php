@@ -17,6 +17,6 @@ class EntityMaster extends Model
 
     public function entities(): HasMany
     {
-        return $this->hasMany(Entity::class);
+        return $this->hasMany(Entity::class, 'entity_master_id');
     }
 }

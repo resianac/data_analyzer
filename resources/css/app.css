@@ -69,9 +69,7 @@
     }
 }
 
-/* 🎨 ИЗУМРУДНАЯ ТЕМА (Emerald Dark) */
 :root {
-    /* Основные цвета */
     --background: hsl(150 20% 98%);
     --foreground: hsl(160 30% 8%);
 
@@ -81,15 +79,12 @@
     --popover: hsl(0 0% 100%);
     --popover-foreground: hsl(160 30% 8%);
 
-    /* Основной цвет — насыщенный изумрудный */
     --primary: hsl(160 84% 30%);
     --primary-foreground: hsl(150 20% 98%);
 
-    /* Вторичный — светлый изумруд */
     --secondary: hsl(160 40% 88%);
     --secondary-foreground: hsl(160 84% 30%);
 
-    /* Приглушённые тона */
     --muted: hsl(150 20% 92%);
     --muted-foreground: hsl(160 20% 45%);
 
@@ -103,7 +98,6 @@
     --input: hsl(160 25% 85%);
     --ring: hsl(160 84% 30%);
 
-    /* Чарты для графиков (изумрудная палитра) */
     --chart-1: hsl(160 84% 35%);
     --chart-2: hsl(120 60% 45%);
     --chart-3: hsl(180 70% 40%);
@@ -112,7 +106,6 @@
 
     --radius: 0.75rem;
 
-    /* Sidebar */
     --sidebar-background: hsl(160 30% 10%);
     --sidebar-foreground: hsl(150 20% 90%);
     --sidebar-primary: hsl(160 84% 40%);
@@ -123,7 +116,6 @@
     --sidebar-ring: hsl(160 84% 40%);
 }
 
-/* 🌙 Тёмная тема */
 .dark {
     --background: hsl(160 30% 6%);
     --foreground: hsl(150 20% 95%);

@@ -6,9 +6,9 @@ use App\Data\EntityData;
 use App\Data\EntityMasterData;
 use App\Models\Entity;
 use App\Models\EntityMaster;
+use App\Services\Listing\Clients\EntityMasterListing;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Spatie\LaravelData\PaginatedDataCollection;
 
 class EntityController extends Controller
 {
@@ -17,17 +17,24 @@ class EntityController extends Controller
      */
     public function index()
     {
-        $masters = EntityMaster::with(['entities' => function ($query) {
-            $query->orderBy('data->is_out_of_stock');
-        }])
-            ->has('entities', '>', 1)
-            ->paginate(100);
-
         return Inertia::render('entity/Index', [
-             'masters' => EntityMasterData::collect(
-                 $masters,
-                 PaginatedDataCollection::class
-             )
+            'masters' => (new EntityMasterListing())->getPaginatedData(),
+            'brands' => Entity::query()
+                ->whereHas('master', function ($query) {
+                    $query->where('category', 'tv');
+                })
+                ->whereNotNull('data->brand')
+                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(data, '$.brand')) as brand")
+                ->selectRaw('COUNT(*) as count')
+                ->groupByRaw("JSON_UNQUOTE(JSON_EXTRACT(data, '$.brand'))")
+                ->orderBy('brand')
+                ->get()
+                ->map(fn ($item) => [
+                    'value' => $item->brand,
+                    'label' => $item->brand,
+                    'count' => $item->count,
+                ])
+                ->values(),
         ]);
     }
 

@@ -21,7 +21,7 @@ class Entity extends Model
 
     public function master(): BelongsTo
     {
-        return $this->belongsTo(EntityMaster::class);
+        return $this->belongsTo(EntityMaster::class, 'entity_master_id');
     }
 
     public function metrics(): HasMany

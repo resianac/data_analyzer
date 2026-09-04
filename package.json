@@ -50,6 +50,8 @@
         "vue-echarts": "^8.2.0",
         "vue-input-otp": "^0.4.0",
         "vue-sonner": "^2.0.9",
+        "vue3-select-component": "^1.0.1",
+        "ziggy-js": "^2.6.4",
         "zod": "^3.25.76"
     },
     "optionalDependencies": {
