@@ -17,6 +17,20 @@ export const SOURCES = {
         website: 'https://www.enter.md',
         color: '#e00061',
     },
+    cactus: {
+        id: 'cactus',
+        label: 'Cactus',
+        logo: '/assets/images/sources/logo/cactus_logo.png',
+        website: 'https://www.cactus.md',
+        color: '#618786',
+    },
+    maximum: {
+        id: 'maximum',
+        label: 'Maximum',
+        logo: '/assets/images/sources/logo/maximum_logo.ico',
+        website: 'https://maximum.md',
+        color: '#00aaf0',
+    },
 };
 
 /**
