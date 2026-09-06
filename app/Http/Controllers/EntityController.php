@@ -19,22 +19,25 @@ class EntityController extends Controller
     {
         return Inertia::render('entity/Index', [
             'masters' => (new EntityMasterListing())->getPaginatedData(),
-            'brands' => Entity::query()
-                ->whereHas('master', function ($query) {
-                    $query->where('category', 'tv');
-                })
-                ->whereNotNull('data->brand')
-                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(data, '$.brand')) as brand")
-                ->selectRaw('COUNT(*) as count')
-                ->groupByRaw("JSON_UNQUOTE(JSON_EXTRACT(data, '$.brand'))")
-                ->orderBy('brand')
-                ->get()
-                ->map(fn ($item) => [
-                    'value' => $item->brand,
-                    'label' => $item->brand,
-                    'count' => $item->count,
-                ])
-                ->values(),
+            'brands' => Inertia::once(fn () =>
+                Entity::query()
+                    ->whereHas('master', fn ($query) => $query->where('category', 'tv'))
+                    ->whereNotNull('data->brand')
+                    ->whereRaw("JSON_EXTRACT(data, '$.brand') != ''")
+                    ->selectRaw(
+                        "JSON_UNQUOTE(JSON_EXTRACT(data, '$.brand')) as brand,
+                        COUNT(*) as count"
+                    )
+                    ->groupBy('brand')
+                    ->get()
+                    ->map(fn($item) => [
+                        'value' => $item->brand,
+                        'label' => $item->brand,
+                        'count' => $item->count,
+                    ])
+                    ->values()
+                    ->toArray()
+            ),
         ]);
     }
 

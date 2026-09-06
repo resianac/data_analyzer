@@ -157,13 +157,12 @@ watch(filters, () => {
 
                 <div class="flex-1">
                     <Label class="mb-1.5 text-xs text-muted-foreground">Source</Label>
-                    <Select
+                    <SelectWithCount
                         v-model="filters.sources"
                         :options="sources"
-                        placeholder="All sources"
                         multiple
                         clearable
-                        class="vue-select"
+                        placeholder="All sources"
                     />
                 </div>
 

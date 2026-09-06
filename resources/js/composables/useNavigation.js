@@ -16,6 +16,9 @@ export default function useNavigation(routeUrl, options = {}) {
         preserveScroll = true,
         replace = true,
         only = [],
+        onStart = null,
+        onFinish = null,
+        onError = null,
     } = options;
 
 
@@ -39,14 +42,13 @@ export default function useNavigation(routeUrl, options = {}) {
         cleanedQuery[key] = Array.isArray(value) ? value.join(',') : value;
     });
 
-    router.get(
-        routeUrl,
-        cleanedQuery,
-        {
-            preserveState,
-            preserveScroll,
-            replace,
-            only,
-        }
-    );
+    router.get(routeUrl, cleanedQuery, {
+        preserveState,
+        preserveScroll,
+        replace,
+        only,
+        onStart,
+        onFinish,
+        onError,
+    });
 };

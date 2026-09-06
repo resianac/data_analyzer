@@ -39,21 +39,14 @@ const changePageSize = (size) => {
 };
 
 const reloadData = (filters = []) => {
-    isLoading.value = true;
     useNavigation(catalog.index().url, {
         filters,
         page: 1,
         only: ['masters', 'query'],
+        onStart: () => isLoading.value = true,
+        onFinish: () => isLoading.value = false,
     });
 };
-
-watch(() => props.masters, () => {
-    if (isLoading.value) {
-        isLoading.value = false;
-    }
-});
-
-console.log(props.brands);
 </script>
 
 <template>
@@ -62,7 +55,7 @@ console.log(props.brands);
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
 
-            <div class="grid grid-cols-1 md:grid-cols-[minmax(200px,240px)_1fr] gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-[minmax(250px,300px)_1fr] gap-6">
                 <div>
                     <EntityFilter
                         :brands="brands"
