@@ -4,6 +4,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import SearchInput from '@/components/forms/input/SearchInput.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,11 +24,8 @@ import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { LayoutGrid, Menu, Search, X, ChevronRight, Home } from 'lucide-vue-next';
 import { computed, ref, onMounted, onUnmounted } from 'vue';
-import InputGroup from "@/components/ui/input-group/InputGroup.vue";
-import InputGroupInput from "@/components/ui/input-group/InputGroupInput.vue";
-import InputGroupAddon from "@/components/ui/input-group/InputGroupAddon.vue";
-import KbdGroup from "@/components/ui/kbd/KbdGroup.vue";
-import Kbd from "@/components/ui/kbd/Kbd.vue";
+import EntityMasterRow from '@/components/partials/catalog/card/EntityMasterRow.vue';
+import GlobalSearch from '@/components/forms/containers/GlobalSearch.vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -41,44 +39,6 @@ const page = usePage();
 const auth = computed(() => page.props.auth);
 
 const searchQuery = ref('');
-const isSearchOpen = ref(false);
-const searchInput = ref<HTMLInputElement | null>(null);
-
-const performSearch = () => {
-    // if (searchQuery.value.trim()) {
-        // Используйте Inertia router или window.location
-        // window.location.href = `/search?q=${encodeURIComponent(searchQuery.value)}`;
-        // Или через Inertia:
-        // router.get('/search', { q: searchQuery.value });
-    // }
-};
-
-const openSearch = () => {
-    isSearchOpen.value = true;
-    setTimeout(() => {
-        searchInput.value?.focus();
-    }, 100);
-};
-
-const closeSearch = () => {
-    isSearchOpen.value = false;
-    searchQuery.value = '';
-};
-
-const handleKeydown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') performSearch();
-    if (e.key === 'Escape') closeSearch();
-};
-
-const handleGlobalKeydown = (e: KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        openSearch();
-    }
-};
-
-onMounted(() => { document.addEventListener('keydown', handleGlobalKeydown); });
-onUnmounted(() => { document.removeEventListener('keydown', handleGlobalKeydown); });
 
 const isCurrentRoute = computed(
     () => (url: NonNullable<InertiaLinkProps['href']>) =>
@@ -144,26 +104,27 @@ const mainNavItems: NavItem[] = [
                     </div>
                 </div>
 
-                <div class="hidden md:flex flex-1 max-w-xl mx-4 relative">
+                <div class="hidden md:flex flex-1 max-w-xl relative">
                     <div class="relative w-full">
-                        <InputGroup>
-                            <InputGroupInput
-                                ref="searchInput"
-                                v-model="searchQuery"
-                                placeholder="Search..."
-                                @keydown="handleKeydown"
-                            />
-                            <InputGroupAddon>
-                                <Search />
-                            </InputGroupAddon>
-                            <InputGroupAddon align="inline-end">
-                                <KbdGroup>
-                                    <Kbd>Ctrl</Kbd>
-                                    <span>+</span>
-                                    <Kbd>K</Kbd>
-                                </KbdGroup>
-                            </InputGroupAddon>
-                        </InputGroup>
+<!--                        <InputGroup>-->
+<!--                            <InputGroupInput-->
+<!--                                ref="searchInput"-->
+<!--                                v-model="searchQuery"-->
+<!--                                placeholder="Search..."-->
+<!--                                @keydown="handleKeydown"-->
+<!--                            />-->
+<!--                            <InputGroupAddon>-->
+<!--                                <Search />-->
+<!--                            </InputGroupAddon>-->
+<!--                            <InputGroupAddon align="inline-end">-->
+<!--                                <KbdGroup>-->
+<!--                                    <Kbd>Ctrl</Kbd>-->
+<!--                                    <span>+</span>-->
+<!--                                    <Kbd>K</Kbd>-->
+<!--                                </KbdGroup>-->
+<!--                            </InputGroupAddon>-->
+<!--                        </InputGroup>-->
+                        <GlobalSearch />
                     </div>
                 </div>
 
@@ -205,31 +166,31 @@ const mainNavItems: NavItem[] = [
                 </div>
             </div>
 
-            <div
-                v-if="isSearchOpen"
-                class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm md:hidden"
-                @click.self="closeSearch"
-            >
-                <div class="container max-w-7xl mx-auto px-4 pt-4">
-                    <div class="flex items-center gap-2">
-                        <div class="relative flex-1">
-                            <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <input
-                                ref="searchInput"
-                                v-model="searchQuery"
-                                type="text"
-                                placeholder="Поиск..."
-                                class="w-full h-12 rounded-lg border border-input bg-background pl-9 pr-4 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                @keydown="handleKeydown"
-                                autofocus
-                            />
-                        </div>
-                        <Button variant="ghost" size="icon" @click="closeSearch">
-                            <X class="h-5 w-5" />
-                        </Button>
-                    </div>
-                </div>
-            </div>
+<!--            <div-->
+<!--                v-if="isSearchOpen"-->
+<!--                class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm md:hidden"-->
+<!--                @click.self="closeSearch"-->
+<!--            >-->
+<!--                <div class="container max-w-7xl mx-auto px-4 pt-4">-->
+<!--                    <div class="flex items-center gap-2">-->
+<!--                        <div class="relative flex-1">-->
+<!--                            <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />-->
+<!--                            <input-->
+<!--                                ref="searchInput"-->
+<!--                                v-model="searchQuery"-->
+<!--                                type="text"-->
+<!--                                placeholder="Поиск..."-->
+<!--                                class="w-full h-12 rounded-lg border border-input bg-background pl-9 pr-4 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"-->
+<!--                                @keydown="handleKeydown"-->
+<!--                                autofocus-->
+<!--                            />-->
+<!--                        </div>-->
+<!--                        <Button variant="ghost" size="icon" @click="closeSearch">-->
+<!--                            <X class="h-5 w-5" />-->
+<!--                        </Button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
         <div

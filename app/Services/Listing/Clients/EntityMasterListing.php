@@ -123,16 +123,16 @@ class EntityMasterListing extends BaseListing
         );
     }
 
-//    protected function applySearch(Builder $query): Builder
-//    {
-//        $searchTerm = $this->getQueryParam('search');
-//
-//        if (empty($searchTerm)) {
-//            return $query;
-//        }
-//
-//        return $query->where(
-//            fn ($query) => $query->where('games.title', 'like', '%' . $searchTerm . '%')
-//        );
-//    }
+    protected function applySearch(Builder $query): Builder
+    {
+        $searchTerm = $this->getQueryParam('search');
+
+        if (empty($searchTerm)) {
+            return $query;
+        }
+
+        return $query->where(
+            fn ($query) => $query->where('title', 'like', '%' . $searchTerm . '%')
+        );
+    }
 }

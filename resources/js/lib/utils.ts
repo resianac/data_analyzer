@@ -17,13 +17,20 @@ export function urlIsActive(url: any): boolean {
 
 export function formatPrice(
     price: number | null | undefined,
+    showCurrency: boolean = true,
     currency: string = 'MDL',
 ): string {
     if (!price) return '—';
 
     return new Intl.NumberFormat('ru-RU', {
-        style: 'currency',
-        currency,
+        ...(showCurrency
+            ? {
+                style: 'currency',
+                currency,
+            }
+            : {
+                style: 'decimal',
+            }),
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
     }).format(price);

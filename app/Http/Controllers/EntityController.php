@@ -15,8 +15,12 @@ class EntityController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->wantsJson()) {
+            return ['masters' => (new EntityMasterListing())->withRequest($request)->getPaginatedData()];
+        }
+
         return Inertia::render('entity/Index', [
             'masters' => (new EntityMasterListing())->getPaginatedData(),
             'brands' => Inertia::once(fn () =>

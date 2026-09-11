@@ -71,12 +71,10 @@ const model = defineModel();
                         class="!cursor-pointer !rounded-sm !px-2 !py-1.5 !text-sm !bg-popover aria-selected:!bg-accent !text-popover-foreground hover:!bg-secondary hover:!text-accent-foreground"
                     >
                         <div class="grid grid-cols-[75px_1fr] gap-1">
-                            <div class="">{{ option.label }}</div>
-                            <div class="">
+                            <div>{{ option.label }}</div>
                             <span v-if="option.count !== undefined" class="!text-xs !text-muted-foreground">
                                 {{ option.count }}
                             </span>
-                            </div>
                         </div>
                         <template #checkmark>
                             <Check class="text-muted-foreground size-4" />
