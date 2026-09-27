@@ -6,9 +6,9 @@ use App\Data\EntityMasterData;
 use App\Models\Entity;
 use App\Models\EntityMaster;
 use App\Services\Listing\BaseListing;
+use App\Services\Listing\Enums\EntityMasterSort;
 use App\Services\Listing\Traits\RequestQuery;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\LaravelData\PaginatedDataCollection;
 
@@ -32,23 +32,21 @@ class EntityMasterListing extends BaseListing
                 Entity::query()
                     ->select('data->is_out_of_stock')
                     ->whereColumn('entities.entity_master_id', 'entity_masters.id')
-                    ->limit(1),
-                'asc'
+                    ->orderBy('data->is_out_of_stock')
+                    ->limit(1)
             );
     }
 
     /**
      * Retrieves a paginated resource collection of games and discounts.
-     *
-     * @return PaginatedDataCollection
      */
     public function getPaginatedData(): PaginatedDataCollection
     {
-//        if (empty($this->queries['search'])) {
-//            return Cache::remember($this->generateCacheKey(), 3600 * 24, function () {
-//                return GameWithPlatformsResource::collection($this->processAndGet());
-//            });
-//        }
+        //        if (empty($this->queries['search'])) {
+        //            return Cache::remember($this->generateCacheKey(), 3600 * 24, function () {
+        //                return GameWithPlatformsResource::collection($this->processAndGet());
+        //            });
+        //        }
 
         return EntityMasterData::collect(
             $this->processAndGet(),
@@ -58,8 +56,6 @@ class EntityMasterListing extends BaseListing
 
     /**
      * Retrieves a collection of games with related discounts and notifications.
-     *
-     * @return LengthAwarePaginator
      */
     protected function processAndGet(): LengthAwarePaginator
     {
@@ -75,7 +71,7 @@ class EntityMasterListing extends BaseListing
         $request = $this->request;
 
         $this->queries = $this->queries->merge([
-            'sort' => $request->query('sort', ["release_date" => 'desc']),
+            'sort' => $request->query('sort', EntityMasterSort::SOURCE_COUNT->value),
             'pageSize' => $request->query('pageSize', 50),
             'price' => $request->query('price', [
                 'min' => null,
@@ -141,7 +137,54 @@ class EntityMasterListing extends BaseListing
         }
 
         return $query->where(
-            fn ($query) => $query->where('title', 'like', '%' . $searchTerm . '%')
+            fn ($query) => $query->where('title', 'like', '%'.$searchTerm.'%')
         );
+    }
+
+    protected function applySorts(Builder $query): Builder
+    {
+        $sort = EntityMasterSort::tryFrom( $this->getQueryParam('sort'));
+
+        $query = match ($sort) {
+            EntityMasterSort::DISCOUNT_DESC => $query
+                ->addSelect([
+                    'max_discount' => Entity::query()
+                        ->selectRaw(
+                            "MAX(CAST(JSON_UNQUOTE(JSON_EXTRACT(data, '$.discount')) AS DECIMAL(10,2)))"
+                        )
+                        ->whereColumn('entity_master_id', 'entity_masters.id')
+                ])
+                ->orderByDesc('max_discount'),
+
+            EntityMasterSort::PRICE_ASC => $query
+                ->addSelect([
+                    'sort_price' => Entity::query()
+                        ->selectRaw(
+                            "MIN(CAST(JSON_UNQUOTE(JSON_EXTRACT(data, '$.price')) AS DECIMAL(10,2)))"
+                        )
+                        ->whereColumn('entities.entity_master_id', 'entity_masters.id')
+                ])
+                ->orderBy('sort_price'),
+
+            EntityMasterSort::PRICE_DESC => $query
+                ->addSelect([
+                    'sort_price' => Entity::query()
+                        ->selectRaw(
+                            "MAX(CAST(JSON_UNQUOTE(JSON_EXTRACT(data, '$.price')) AS DECIMAL(10,2)))"
+                        )
+                        ->whereColumn('entities.entity_master_id', 'entity_masters.id')
+                ])
+                ->orderByDesc('sort_price'),
+
+            /** Default: EntityMasterSort::SOURCE_COUNT */
+            default => $query->orderBy(
+                Entity::query()
+                    ->selectRaw('COUNT(DISTINCT source)')
+                    ->whereColumn('entities.entity_master_id', 'entity_masters.id'),
+                'desc',
+            ),
+        };
+
+        return $query->orderBy('entity_masters.id');
     }
 }

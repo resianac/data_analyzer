@@ -1,12 +1,12 @@
 <script setup>
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { ExternalLink, Box, PackageX } from 'lucide-vue-next';
+import { Box } from 'lucide-vue-next';
 import { useSource } from '@/composables/useSource.js';
 import { Link } from '@inertiajs/vue3';
 import EntitySourceRow from '@/components/partials/catalog/entity/EntitySourceRow.vue';
 import catalog from '@/routes/catalog/index.js';
 import { computed } from 'vue';
+import { useMediaQuery } from '@vueuse/core';
 
 const props = defineProps({
     master: {
@@ -15,6 +15,7 @@ const props = defineProps({
     }
 });
 
+const compact = useMediaQuery('(max-width: 1024px)');
 const entities = props.master.entities || [];
 const currency = entities[0]?.data?.currency || 'MDL';
 
@@ -58,6 +59,7 @@ const bestPrice = sortedEntities.length > 0
                     :entity="entity"
                     :is-best-price="entity.data?.price === bestPrice && sortedEntities.length > 1"
                     :currency="currency"
+                    :compact="compact"
                 />
             </div>
 

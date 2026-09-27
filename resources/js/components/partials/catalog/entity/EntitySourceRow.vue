@@ -18,7 +18,6 @@ const props = defineProps({
         type: String,
         default: 'MDL'
     },
-    // Новый флаг для режима отображения
     compact: {
         type: Boolean,
         default: false
@@ -44,7 +43,7 @@ const { label, logo } = useSource(props.entity.source);
     <div
         v-if="compact"
         :title="label"
-        class="flex items-center gap-1 px-1 py-1 rounded-md hover:bg-accent/50 transition-colors group"
+        class="flex items-center justify-between gap-1 px-1 py-1 rounded-md hover:bg-accent/50 transition-colors group"
         :class="[
             isBestPrice && !isOutOfStock
                 ? 'bg-primary/5 border border-primary/15'
@@ -126,7 +125,7 @@ const { label, logo } = useSource(props.entity.source);
             :href="entity.data?.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors group flex-shrink-0 min-w-[80px]"
+            class="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors group flex-shrink-0 min-w-[80px]"
         >
             <img
                 class="size-4 rounded object-contain flex-shrink-0"
@@ -135,7 +134,6 @@ const { label, logo } = useSource(props.entity.source);
                 loading="lazy"
             />
             <span class="truncate">{{ label }}</span>
-            <ExternalLink class="h-2.5 w-2.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
         </a>
 
         <div class="flex items-center gap-1 flex-shrink-0">
@@ -144,7 +142,7 @@ const { label, logo } = useSource(props.entity.source);
                 variant="outline"
                 class="text-[10px] px-1.5 py-0 h-5 border-green-500/30 text-green-600 dark:text-green-400"
             >
-                -{{ getDiscountPercent }}%
+                {{ getDiscountPercent }}%
             </Badge>
 
             <div v-if="isOutOfStock" title="Out of stock">
@@ -156,10 +154,10 @@ const { label, logo } = useSource(props.entity.source);
                 class="w-px h-4 bg-border"
             />
 
-            <div class="flex items-center gap-1">
+            <div class="relative flex items-center gap-1">
                 <span
                     v-if="entity.data?.old_price && !isOutOfStock"
-                    class="text-[10px] text-muted-foreground line-through"
+                    class="absolute -top-2 text-[11px] text-muted-foreground"
                 >
                     {{ formatPrice(entity.data?.old_price, false) }}
                 </span>

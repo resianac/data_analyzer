@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\EntityData;
 use App\Data\EntityMasterData;
 use App\Models\Entity;
 use App\Models\EntityMaster;
@@ -18,29 +17,28 @@ class EntityController extends Controller
     public function index(Request $request)
     {
         if ($request->wantsJson()) {
-            return ['masters' => (new EntityMasterListing())->withRequest($request)->getPaginatedData()];
+            return ['masters' => (new EntityMasterListing)->withRequest($request)->getPaginatedData()];
         }
 
         return Inertia::render('entity/Index', [
-            'masters' => (new EntityMasterListing())->getPaginatedData(),
-            'brands' => Inertia::once(fn () =>
-                Entity::query()
-                    ->whereHas('master', fn ($query) => $query->where('category', 'tv'))
-                    ->whereNotNull('data->brand')
-                    ->whereRaw("JSON_EXTRACT(data, '$.brand') != ''")
-                    ->selectRaw(
-                        "JSON_UNQUOTE(JSON_EXTRACT(data, '$.brand')) as brand,
+            'masters' => (new EntityMasterListing)->getPaginatedData(),
+            'brands' => Inertia::once(fn () => Entity::query()
+                ->whereHas('master', fn ($query) => $query->where('category', 'tv'))
+                ->whereNotNull('data->brand')
+                ->whereRaw("JSON_EXTRACT(data, '$.brand') != ''")
+                ->selectRaw(
+                    "JSON_UNQUOTE(JSON_EXTRACT(data, '$.brand')) as brand,
                         COUNT(*) as count"
-                    )
-                    ->groupBy('brand')
-                    ->get()
-                    ->map(fn($item) => [
-                        'value' => $item->brand,
-                        'label' => $item->brand,
-                        'count' => $item->count,
-                    ])
-                    ->values()
-                    ->toArray()
+                )
+                ->groupBy('brand')
+                ->get()
+                ->map(fn ($item) => [
+                    'value' => $item->brand,
+                    'label' => $item->brand,
+                    'count' => $item->count,
+                ])
+                ->values()
+                ->toArray()
             ),
         ]);
     }
