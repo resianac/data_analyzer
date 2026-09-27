@@ -9,23 +9,23 @@ use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Bomba\BombaClient;
 use App\Services\Sources\Clients\Bomba\Enums\BombaSearchParam;
-use App\Services\Sources\Contracts\ConfigInterface;
-use App\Services\Sources\Drivers\HtmlParserDriver;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Support\BaseConfig;
+use App\Services\Sources\Shared\Contracts\ConfigInterface;
+use App\Services\Sources\Shared\Transport\HtmlTransport;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Configuration\BaseSourceConfig;
 use Illuminate\Pipeline\Pipeline;
 
 class SearchBombaEntitiesAction
 {
     private bool $hasNextPage = false;
     private BaseClient $client;
-    private BaseConfig|ConfigInterface $config;
+    private BaseSourceConfig|ConfigInterface $config;
 
     public function __construct(
         private readonly BombaSearchParam $searchParam,
         private readonly EntityFilter     $filter = EntityFilter::BOMBA_ENTITY,
     ) {
-        $this->client = new BombaClient(HtmlParserDriver::make());
+        $this->client = new BombaClient(HtmlTransport::make());
         $this->config = $this->client->getConfig();
     }
 

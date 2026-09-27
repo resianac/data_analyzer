@@ -4,9 +4,9 @@ namespace App\Services\Sources\Clients\Marketplace999\Adapters;
 
 use App\Data\EntityData;
 use App\Services\Sources\Clients\Marketplace999\Data\FlatData;
-use App\Services\Sources\Contracts\AdapterInterface;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\SourceClientType;
+use App\Services\Sources\Shared\Contracts\AdapterInterface;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\SourceClientType;
 
 class FlatDataAdapter implements AdapterInterface
 {

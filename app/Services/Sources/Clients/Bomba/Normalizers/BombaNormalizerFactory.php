@@ -3,7 +3,7 @@
 namespace App\Services\Sources\Clients\Bomba\Normalizers;
 
 use App\Services\Sources\Clients\Bomba\Enums\BombaSearchParam;
-use App\Services\Sources\Contracts\NormalizerInterface;
+use App\Services\Sources\Shared\Contracts\NormalizerInterface;
 use RuntimeException;
 
 class BombaNormalizerFactory

@@ -3,7 +3,7 @@
 namespace App\Services\Sources\Clients\Maximum\Normalizers;
 
 use App\Services\Sources\Clients\Maximum\Data\MaximumData;
-use App\Services\Sources\Support\BaseNormalizer;
+use App\Services\Sources\Shared\Normalization\BaseNormalizer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Spatie\LaravelData\Data;

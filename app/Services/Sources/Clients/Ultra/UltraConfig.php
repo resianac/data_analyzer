@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Ultra;
 
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Support\BaseConfig;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Configuration\BaseSourceConfig;
 
-class UltraConfig extends BaseConfig
+class UltraConfig extends BaseSourceConfig
 {
     public static string $baseUrl = "https://ultra.md/ru/";
 

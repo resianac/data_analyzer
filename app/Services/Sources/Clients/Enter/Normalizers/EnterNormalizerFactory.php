@@ -3,7 +3,7 @@
 namespace App\Services\Sources\Clients\Enter\Normalizers;
 
 use App\Services\Sources\Clients\Enter\Enums\EnterSearchParam;
-use App\Services\Sources\Contracts\NormalizerInterface;
+use App\Services\Sources\Shared\Contracts\NormalizerInterface;
 use RuntimeException;
 
 class EnterNormalizerFactory

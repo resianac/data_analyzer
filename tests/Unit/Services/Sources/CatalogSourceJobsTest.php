@@ -1,23 +1,31 @@
 <?php
 
-use App\Services\Sources\Clients\Cactus\Actions\OrchestrateCactusSearchAction;
-use App\Services\Sources\Clients\Cactus\Jobs\SearchCactusCategoryJob;
-use App\Services\Sources\Clients\Enter\Actions\OrchestrateEnterSearchAction;
-use App\Services\Sources\Clients\Enter\Jobs\SearchEnterCategoryJob;
-use App\Services\Sources\Clients\Maximum\Actions\OrchestrateMaximumSearchAction;
-use App\Services\Sources\Clients\Maximum\Jobs\SearchMaximumCategoryJob;
-use App\Services\Sources\Clients\Ultra\Actions\OrchestrateUltraSearchAction;
-use App\Services\Sources\Clients\Ultra\Jobs\SearchUltraCategoryJob;
+use App\Services\Sources\Modules\Catalog\Application\Run\CatalogProviderRegistry;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Cactus\CactusCatalogProvider;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Cactus\Jobs\SearchCactusCategoryJob;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Enter\EnterCatalogProvider;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Enter\Jobs\SearchEnterCategoryJob;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Maximum\Jobs\SearchMaximumCategoryJob;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Maximum\MaximumCatalogProvider;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Ultra\Jobs\SearchUltraCategoryJob;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Ultra\UltraCatalogProvider;
 
 it('builds one queued job for every configured catalog category', function () {
     $runId = 'test-run';
 
-    $jobs = [
-        ...OrchestrateEnterSearchAction::all()->jobs($runId),
-        ...OrchestrateCactusSearchAction::all()->jobs($runId),
-        ...OrchestrateMaximumSearchAction::all()->jobs($runId),
-        ...OrchestrateUltraSearchAction::all()->jobs($runId),
-    ];
+    $registry = new CatalogProviderRegistry([
+        new EnterCatalogProvider,
+        new CactusCatalogProvider,
+        new MaximumCatalogProvider,
+        new UltraCatalogProvider,
+    ]);
+
+    $jobs = collect($registry->all())
+        ->flatMap(fn ($provider) => collect($provider->categories())
+            ->map(fn ($category) => $provider->job($category, $runId)
+                ->onConnection('sources')
+                ->onQueue('sources')))
+        ->all();
 
     expect($jobs)
         ->toHaveCount(6)

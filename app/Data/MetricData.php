@@ -2,9 +2,9 @@
 
 namespace App\Data;
 
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Enums\SourceClientType;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Enums\SourceClientType;
 use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;

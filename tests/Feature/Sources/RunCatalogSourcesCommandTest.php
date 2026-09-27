@@ -1,13 +1,14 @@
 <?php
 
-use App\Services\Sources\Clients\Cactus\Jobs\SearchCactusCategoryJob;
-use App\Services\Sources\Clients\Enter\Jobs\SearchEnterCategoryJob;
-use App\Services\Sources\Clients\Maximum\Jobs\SearchMaximumCategoryJob;
-use App\Services\Sources\Clients\Ultra\Jobs\SearchUltraCategoryJob;
-use App\Services\Sources\Orchestration\CatalogCategoryRunResult;
-use App\Services\Sources\Orchestration\CatalogSource;
-use App\Services\Sources\Orchestration\CatalogSourceRunResult;
-use App\Services\Sources\Orchestration\CatalogSourcesOrchestrator;
+use App\Services\Sources\Modules\Catalog\Application\Run\CatalogRunCoordinator;
+use App\Services\Sources\Modules\Catalog\Contracts\CatalogRunObserver;
+use App\Services\Sources\Modules\Catalog\Domain\CatalogSource;
+use App\Services\Sources\Modules\Catalog\Domain\Results\CategoryRunResult;
+use App\Services\Sources\Modules\Catalog\Domain\Results\SourceRunResult;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Cactus\Jobs\SearchCactusCategoryJob;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Enter\Jobs\SearchEnterCategoryJob;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Maximum\Jobs\SearchMaximumCategoryJob;
+use App\Services\Sources\Modules\Catalog\Infrastructure\Providers\Ultra\Jobs\SearchUltraCategoryJob;
 use Illuminate\Bus\PendingBatch;
 use Illuminate\Support\Facades\Bus;
 
@@ -57,27 +58,27 @@ it('rejects unknown sources and modes without dispatching a batch', function () 
 });
 
 it('shows every category with its duration and error', function () {
-    $tv = new CatalogCategoryRunResult(
+    $tv = new CategoryRunResult(
         source: CatalogSource::ENTER,
         category: 'TV',
         durationMs: 18_400,
     );
-    $fridge = new CatalogCategoryRunResult(
+    $fridge = new CategoryRunResult(
         source: CatalogSource::ENTER,
         category: 'FRIDGE',
         durationMs: 22_100,
         exception: new \RuntimeException('HTTP 503'),
     );
 
-    $orchestrator = Mockery::mock(CatalogSourcesOrchestrator::class);
-    $orchestrator->shouldReceive('runSync')
+    $coordinator = Mockery::mock(CatalogRunCoordinator::class);
+    $coordinator->shouldReceive('runSync')
         ->once()
-        ->andReturnUsing(function ($sources, $runId, $onSourceStart, $onCategoryFinished) use ($tv, $fridge) {
-            $onSourceStart(CatalogSource::ENTER);
-            $onCategoryFinished($tv);
-            $onCategoryFinished($fridge);
+        ->andReturnUsing(function ($sources, $runId, CatalogRunObserver $observer) use ($tv, $fridge) {
+            $observer->sourceStarted(CatalogSource::ENTER, 1, 1);
+            $observer->categoryFinished($tv);
+            $observer->categoryFinished($fridge);
 
-            return [new CatalogSourceRunResult(
+            return [new SourceRunResult(
                 source: CatalogSource::ENTER,
                 durationMs: 40_500,
                 exception: $fridge->exception,
@@ -85,7 +86,7 @@ it('shows every category with its duration and error', function () {
             )];
         });
 
-    $this->app->instance(CatalogSourcesOrchestrator::class, $orchestrator);
+    $this->app->instance(CatalogRunCoordinator::class, $coordinator);
 
     $this->artisan('sources:catalog:run', ['sources' => ['enter']])
         ->expectsOutputToContain('[1/1] Enter')

@@ -6,8 +6,8 @@ use App\Data\EntityData;
 use App\Services\Sources\Clients\Ultra\Adapters\UltraDataAdapter;
 use App\Services\Sources\Clients\Ultra\Enums\UltraSearchParam;
 use App\Services\Sources\Clients\Ultra\Normalizers\UltraNormalizerFactory;
-use App\Services\Sources\Data\Casts\NumberCast;
-use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Shared\Data\Casts\NumberCast;
+use App\Services\Sources\Shared\Enums\EntityFilter;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 

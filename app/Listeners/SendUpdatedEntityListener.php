@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\EntityUpdated;
 use App\Jobs\SendMessageToTelegram;
 use App\Services\Sources\Clients\Marketplace999\Filters\Formatters\Entity\FlatDefaultFormatter;
-use App\Services\Sources\Filters\Factories\FormatterFactory;
+use App\Services\Sources\Shared\Factories\FormatterFactory;
 use Illuminate\Support\Facades\Log;
 
 class SendUpdatedEntityListener

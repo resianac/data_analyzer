@@ -3,7 +3,7 @@
 namespace App\Services\Sources\Clients\Cactus\Normalizers;
 
 use App\Services\Sources\Clients\Cactus\Enums\CactusSearchParam;
-use App\Services\Sources\Contracts\NormalizerInterface;
+use App\Services\Sources\Shared\Contracts\NormalizerInterface;
 use RuntimeException;
 
 class CactusNormalizerFactory

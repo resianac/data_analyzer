@@ -6,9 +6,9 @@ use App\Data\EntityData;
 use App\Services\Sources\Clients\Maximum\Adapters\MaximumDataAdapter;
 use App\Services\Sources\Clients\Maximum\Enums\MaximumSearchParam;
 use App\Services\Sources\Clients\Maximum\Normalizers\MaximumNormalizerFactory;
-use App\Services\Sources\Data\Casts\DigitsCast;
-use App\Services\Sources\Data\Casts\NumberCast;
-use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Shared\Data\Casts\DigitsCast;
+use App\Services\Sources\Shared\Data\Casts\NumberCast;
+use App\Services\Sources\Shared\Enums\EntityFilter;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 

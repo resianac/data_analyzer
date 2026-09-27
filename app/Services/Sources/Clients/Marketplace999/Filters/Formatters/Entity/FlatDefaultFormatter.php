@@ -2,7 +2,7 @@
 
 namespace App\Services\Sources\Clients\Marketplace999\Filters\Formatters\Entity;
 
-use App\Services\Sources\Filters\BaseFormatter;
+use App\Services\Sources\Shared\Formatting\BaseFormatter;
 use stdClass;
 
 class FlatDefaultFormatter extends BaseFormatter

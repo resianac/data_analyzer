@@ -3,9 +3,9 @@
 namespace App\Services\Sources\Clients\Bomba\Adapters;
 
 use App\Services\Sources\Clients\Bomba\Data\BombaData;
-use App\Services\Sources\Contracts\AdapterInterface;
+use App\Services\Sources\Shared\Contracts\AdapterInterface;
 use App\Data\EntityData;
-use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\EntityFilter;
 
 class BombaDataAdapter implements AdapterInterface
 {

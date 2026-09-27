@@ -3,7 +3,7 @@
 namespace App\Services\Sources\Clients\Bomba\Data;
 
 use App\Data\EntityData;
-use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\EntityFilter;
 use Spatie\LaravelData\Data;
 
 class BombaData extends Data

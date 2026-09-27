@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Enter;
 
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Support\BaseConfig;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Configuration\BaseSourceConfig;
 
-class EnterConfig extends BaseConfig
+class EnterConfig extends BaseSourceConfig
 {
     public static string $baseUrl = "https://enter.online/ru/";
 

@@ -2,7 +2,7 @@
 
 namespace App\Services\Sources\Clients\Maximum\Filters\Variables;
 
-use App\Services\Sources\Contracts\Variables\HtmlVariablesInterface;
+use App\Services\Sources\Shared\Contracts\HtmlVariablesInterface;
 
 class MaximumEntityVariables implements HtmlVariablesInterface
 {

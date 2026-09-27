@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands\Sources\Catalog;
 
-use App\Services\Sources\Orchestration\CatalogCategoryRunResult;
-use App\Services\Sources\Orchestration\CatalogSource;
-use App\Services\Sources\Orchestration\CatalogSourcesOrchestrator;
-use App\Services\Sources\Orchestration\SourceRunMode;
+use App\Services\Sources\Modules\Catalog\Application\Run\CatalogRunCoordinator;
+use App\Services\Sources\Modules\Catalog\Domain\CatalogSource;
+use App\Services\Sources\Modules\Catalog\Domain\Results\CategoryRunResult;
+use App\Services\Sources\Modules\Catalog\Domain\SourceRunMode;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Throwable;
@@ -20,7 +20,7 @@ class RunCatalogSourcesCommand extends Command
 
     protected $description = 'Run catalog data sources now or dispatch them as one queued batch';
 
-    public function handle(CatalogSourcesOrchestrator $orchestrator): int
+    public function handle(CatalogRunCoordinator $coordinator): int
     {
         $mode = SourceRunMode::tryFrom(strtolower((string) $this->option('mode')));
 
@@ -57,9 +57,9 @@ class RunCatalogSourcesCommand extends Command
         )).'</comment>');
 
         return match ($mode) {
-            SourceRunMode::SYNC => $this->runSync($orchestrator, $sources, $runId),
+            SourceRunMode::SYNC => $this->runSync($coordinator, $sources, $runId),
             SourceRunMode::QUEUE => $this->runQueued(
-                $orchestrator,
+                $coordinator,
                 $sources,
                 $runId,
                 $connection,
@@ -101,28 +101,20 @@ class RunCatalogSourcesCommand extends Command
      * @param  array<int, CatalogSource>  $sources
      */
     private function runSync(
-        CatalogSourcesOrchestrator $orchestrator,
+        CatalogRunCoordinator $coordinator,
         array $sources,
         string $runId,
     ): int {
-        $position = 0;
-        $totalSources = count($sources);
-
-        $results = $orchestrator->runSync(
+        $results = $coordinator->runSync(
             sources: $sources,
             runId: $runId,
-            onSourceStart: function (CatalogSource $source) use (&$position, $totalSources): void {
-                $position++;
-                $this->newLine();
-                $this->line(sprintf('[%d/%d] %s', $position, $totalSources, $source->label()));
-            },
-            onCategoryFinished: fn (CatalogCategoryRunResult $result) => $this->renderCategoryResult($result),
+            observer: new ConsoleCatalogRunObserver($this),
         );
 
         $categoryResults = collect($results)
             ->flatMap(fn ($result) => $result->categories);
         $failed = $categoryResults
-            ->filter(fn (CatalogCategoryRunResult $result) => ! $result->succeeded())
+            ->filter(fn (CategoryRunResult $result) => ! $result->succeeded())
             ->count();
         $completed = $categoryResults->count() - $failed;
 
@@ -148,17 +140,18 @@ class RunCatalogSourcesCommand extends Command
     }
 
     /**
-     * @param array<int, CatalogSource> $sources
+     * @param  array<int, CatalogSource>  $sources
+     *
      * @throws Throwable
      */
     private function runQueued(
-        CatalogSourcesOrchestrator $orchestrator,
+        CatalogRunCoordinator $coordinator,
         array $sources,
         string $runId,
         string $connection,
         string $queue,
     ): int {
-        $batch = $orchestrator->dispatchBatch(
+        $batch = $coordinator->dispatchBatch(
             sources: $sources,
             runId: $runId,
             connection: $connection,
@@ -172,26 +165,5 @@ class RunCatalogSourcesCommand extends Command
         $this->line("Worker: <comment>php artisan queue:work {$connection} --queue={$queue} --timeout=900 --tries=3</comment>");
 
         return self::SUCCESS;
-    }
-
-    private function formatDuration(int $milliseconds): string
-    {
-        return number_format($milliseconds / 1000, 1).'s';
-    }
-
-    private function renderCategoryResult(CatalogCategoryRunResult $result): void
-    {
-        $symbol = $result->succeeded() ? '<fg=green>✓</>' : '<fg=red>✗</>';
-        $status = $result->succeeded() ? 'completed' : 'failed';
-        $details = $result->exception === null ? '' : '  '.$result->exception->getMessage();
-
-        $this->line(sprintf(
-            '  %s %-16s %-10s %8s%s',
-            $symbol,
-            $result->category,
-            $status,
-            $this->formatDuration($result->durationMs),
-            $details,
-        ));
     }
 }

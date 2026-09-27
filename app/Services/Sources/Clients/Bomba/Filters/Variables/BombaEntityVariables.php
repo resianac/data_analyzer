@@ -2,7 +2,7 @@
 
 namespace App\Services\Sources\Clients\Bomba\Filters\Variables;
 
-use App\Services\Sources\Contracts\Variables\HtmlVariablesInterface;
+use App\Services\Sources\Shared\Contracts\HtmlVariablesInterface;
 
 class BombaEntityVariables implements HtmlVariablesInterface
 {

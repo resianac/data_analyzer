@@ -6,9 +6,9 @@ use App\Models\Entity;
 use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetAverageValueAction;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values\GetMostFrequentValueAction;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Enums\SourceClientType;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Enums\SourceClientType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 

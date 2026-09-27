@@ -5,34 +5,24 @@ namespace App\Services\Sources\Clients\Maximum;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Maximum\Data\MaximumData;
 use App\Services\Sources\Clients\Maximum\Enums\MaximumSearchParam;
-use App\Data\EntityData;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\SourceClientType;
-use App\Services\Sources\Filters\Factories\VariableFactory;
+use App\Services\Sources\Shared\Data\PageResult;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\SourceClientType;
+use App\Services\Sources\Shared\Factories\VariableFactory;
 use Illuminate\Support\Collection;
 
 class MaximumClient extends BaseClient
 {
     protected string $name = 'maximum';
+
     protected SourceClientType $type = SourceClientType::MAXIMUM;
 
-    /**
-     * @param string $operationName
-     * @param array $selectors
-     * @return Collection
-     */
     public function execute(string $operationName, array $selectors): Collection
     {
-        return $this->driver->call($operationName, $selectors);
+        return $this->transport->call($operationName, $selectors);
     }
 
-    /**
-     * @param EntityFilter $filter
-     * @param MaximumSearchParam $param
-     * @param string $page
-     * @return Collection<EntityData>
-     */
-    public function search(EntityFilter $filter, MaximumSearchParam $param, string $page): Collection
+    public function search(EntityFilter $filter, MaximumSearchParam $param, string $page): PageResult
     {
         $variableClass = (new VariableFactory)->make($this->type, $filter);
 
@@ -41,11 +31,12 @@ class MaximumClient extends BaseClient
             $variableClass::byItems()
         );
 
-        $this->hasNextPage = !is_null($data['next_page_button']);
-
-        return MaximumData::collect($data['entities'], Collection::class)
-            ->map(fn (MaximumData $item) => $item->toGeneral($filter, $param))
-            ->filter()
-            ->values();
+        return new PageResult(
+            entities: MaximumData::collect($data['entities'], Collection::class)
+                ->map(fn (MaximumData $item) => $item->toGeneral($filter, $param))
+                ->filter()
+                ->values(),
+            hasNextPage: ! is_null($data['next_page_button']),
+        );
     }
 }

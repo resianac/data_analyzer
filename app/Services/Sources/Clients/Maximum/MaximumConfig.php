@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Maximum;
 
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Support\BaseConfig;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Configuration\BaseSourceConfig;
 
-class MaximumConfig extends BaseConfig
+class MaximumConfig extends BaseSourceConfig
 {
     public static string $baseUrl = "https://maximum.md/ru/";
 

@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Events\EntityCreated;
 use App\Jobs\SendMessageToTelegram;
-use App\Services\Sources\Filters\Factories\FormatterFactory;
+use App\Services\Sources\Shared\Factories\FormatterFactory;
 
 class SendCreatedEntityListener
 {

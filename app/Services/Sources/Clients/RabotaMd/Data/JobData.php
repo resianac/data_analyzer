@@ -4,8 +4,8 @@ namespace App\Services\Sources\Clients\RabotaMd\Data;
 
 use App\Data\EntityData;
 use App\Services\Sources\Clients\RabotaMd\Adapters\JobDataAdapter;
-use App\Services\Sources\Configs\RabotaMdConfig;
-use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Clients\RabotaMd\RabotaMdConfig;
+use App\Services\Sources\Shared\Enums\EntityFilter;
 use Illuminate\Support\Str;
 use Spatie\LaravelData\Data;
 

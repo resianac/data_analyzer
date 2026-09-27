@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Casts\SchemalessAttributesCast;
-use App\Services\Sources\Enums\SourceClientType;
-use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\SourceClientType;
+use App\Services\Sources\Shared\Enums\EntityFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

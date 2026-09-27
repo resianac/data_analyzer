@@ -3,7 +3,7 @@
 namespace App\Services\Sources\Clients\Ultra\Normalizers;
 
 use App\Services\Sources\Clients\Ultra\Enums\UltraSearchParam;
-use App\Services\Sources\Contracts\NormalizerInterface;
+use App\Services\Sources\Shared\Contracts\NormalizerInterface;
 use RuntimeException;
 
 class UltraNormalizerFactory

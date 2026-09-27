@@ -4,10 +4,10 @@ namespace App\Services\Sources\Clients\Ultra\Adapters;
 
 use App\Data\EntityData;
 use App\Services\Sources\Clients\Ultra\Data\UltraData;
-use App\Services\Sources\Contracts\AdapterInterface;
-use App\Services\Sources\Data\SourceDataAttributes\ProductAttributes;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\SourceClientType;
+use App\Services\Sources\Shared\Contracts\AdapterInterface;
+use App\Services\Sources\Shared\Data\ProductAttributes;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\SourceClientType;
 
 class UltraDataAdapter implements AdapterInterface
 {

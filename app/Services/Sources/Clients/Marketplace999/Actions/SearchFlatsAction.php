@@ -6,21 +6,21 @@ use App\Services\Pipelines\EntityProcessing\FilterDuplicatesPipe;
 use App\Services\Pipelines\EntityProcessing\StoreEntitiesPipe;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Marketplace999\Marketplace999Client;
-use App\Services\Sources\Contracts\ConfigInterface;
-use App\Services\Sources\Drivers\GraphQLDriver;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Support\BaseConfig;
+use App\Services\Sources\Shared\Contracts\ConfigInterface;
+use App\Services\Sources\Shared\Transport\GraphQLTransport;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Configuration\BaseSourceConfig;
 use Illuminate\Pipeline\Pipeline;
 
 class SearchFlatsAction
 {
     private int|null $count;
     private BaseClient $client;
-    private BaseConfig|ConfigInterface $config;
+    private BaseSourceConfig|ConfigInterface $config;
 
     public function __construct()
     {
-        $this->client = new Marketplace999Client(GraphQLDriver::make());
+        $this->client = new Marketplace999Client(GraphQLTransport::make());
         $this->config = $this->client->getConfig();
     }
 

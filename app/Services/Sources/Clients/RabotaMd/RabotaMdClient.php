@@ -5,30 +5,23 @@ namespace App\Services\Sources\Clients\RabotaMd;
 use App\Data\EntityData;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\RabotaMd\Data\JobData;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\SourceClientType;
-use App\Services\Sources\Filters\Factories\VariableFactory;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\SourceClientType;
+use App\Services\Sources\Shared\Factories\VariableFactory;
 use Illuminate\Support\Collection;
 
 class RabotaMdClient extends BaseClient
 {
     protected string $name = 'rabota_md';
+
     protected SourceClientType $type = SourceClientType::RABOTA_MD;
 
-    /**
-     * @param string $operationName
-     * @param array $selectors
-     * @return Collection
-     */
     public function execute(string $operationName, array $selectors): Collection
     {
-        return $this->driver->call($operationName, $selectors);
+        return $this->transport->call($operationName, $selectors);
     }
 
     /**
-     * @param EntityFilter $filter
-     * @param string $operationName
-     * @param string $page
      * @return Collection<EntityData>
      */
     public function jobSearch(EntityFilter $filter, string $operationName, string $page): Collection
@@ -41,7 +34,7 @@ class RabotaMdClient extends BaseClient
         );
 
         $vacancies = $data['vacancy_items'];
-        $this->count = !!$data['next_page_button'];
+        $this->count = (bool) $data['next_page_button'];
 
         return JobData::collect($vacancies, Collection::class)
             ->map(

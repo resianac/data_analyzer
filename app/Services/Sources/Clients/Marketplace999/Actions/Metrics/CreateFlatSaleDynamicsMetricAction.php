@@ -5,8 +5,8 @@ namespace App\Services\Sources\Clients\Marketplace999\Actions\Metrics;
 use App\Data\MetricData;
 use App\Services\Repository\MetricTracker;
 use App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Generators\GetFlatSaleDynamicsGeneratorAction;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\SourceClientType;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\SourceClientType;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 

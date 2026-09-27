@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Enums\SourceClientType;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Enums\SourceClientType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

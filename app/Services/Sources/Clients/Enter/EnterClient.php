@@ -2,37 +2,27 @@
 
 namespace App\Services\Sources\Clients\Enter;
 
-use App\Data\EntityData;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Enter\Data\EnterData;
 use App\Services\Sources\Clients\Enter\Enums\EnterSearchParam;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\SourceClientType;
-use App\Services\Sources\Filters\Factories\VariableFactory;
+use App\Services\Sources\Shared\Data\PageResult;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\SourceClientType;
+use App\Services\Sources\Shared\Factories\VariableFactory;
 use Illuminate\Support\Collection;
 
 class EnterClient extends BaseClient
 {
     protected string $name = 'enter';
+
     protected SourceClientType $type = SourceClientType::ENTER;
 
-    /**
-     * @param string $operationName
-     * @param array $selectors
-     * @return Collection
-     */
     public function execute(string $operationName, array $selectors): Collection
     {
-        return $this->driver->call($operationName, $selectors);
+        return $this->transport->call($operationName, $selectors);
     }
 
-    /**
-     * @param EntityFilter $filter
-     * @param EnterSearchParam $operationName
-     * @param string $page
-     * @return Collection<EntityData>
-     */
-    public function search(EntityFilter $filter, EnterSearchParam $operationName, string $page): Collection
+    public function search(EntityFilter $filter, EnterSearchParam $operationName, string $page): PageResult
     {
         $variableClass = (new VariableFactory)->make($this->type, $filter);
 
@@ -41,11 +31,10 @@ class EnterClient extends BaseClient
             $variableClass::byItems()
         );
 
-        $this->hasNextPage = (bool) $data['next_page_button'];
-
-        return EnterData::collect($data['entities'], Collection::class)
-            ->map(
-                fn (EnterData $enterData) => $enterData->toGeneral($filter, $operationName)
-            );
+        return new PageResult(
+            entities: EnterData::collect($data['entities'], Collection::class)
+                ->map(fn (EnterData $enterData) => $enterData->toGeneral($filter, $operationName)),
+            hasNextPage: (bool) $data['next_page_button'],
+        );
     }
 }

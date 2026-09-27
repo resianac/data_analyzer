@@ -1,0 +1,183 @@
+<?php
+
+namespace App\Services\Sources\Shared\Formatting;
+
+use App\Models\Entity;
+use App\Services\Sources\Shared\Contracts\FormatterInterface;
+use RuntimeException;
+use stdClass;
+use Throwable;
+
+abstract class BaseFormatter implements FormatterInterface
+{
+    /** Message header */
+    protected string $header;
+
+    /** Message body */
+    protected string $body;
+
+    /** Prepared data for rendering */
+    protected stdClass $data;
+
+    /** Changed fields */
+    protected array $changes;
+
+    /** Original values before update */
+    protected array $original;
+
+    /** Related entity */
+    protected mixed $subject;
+
+    /** Fields that should trigger notifications when entity was updated */
+    protected array $watch = [];
+
+    /**
+     * @param  array  $changes  Changed attributes
+     * @param  array  $original  Original attributes
+     *
+     * @throws Throwable
+     */
+    public function __construct(mixed $subject, array $changes = [], array $original = [])
+    {
+        $this->changes = $changes;
+        $this->original = $original;
+        $this->subject = $subject;
+        $this->data = new stdClass;
+
+        try {
+            $this->processData()
+                ->setHeader()
+                ->setBody();
+        } catch (Throwable $e) {
+            throw new RuntimeException(
+                sprintf(
+                    "Formatting error in %s: %s\nSubject: %s",
+                    static::class,
+                    $e->getMessage(),
+                    is_object($subject) ? get_class($subject) : gettype($subject)
+                ),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public static function make(mixed $subject): static
+    {
+        return new static($subject);
+    }
+
+    /**
+     * Prepare formatter data.
+     */
+    abstract protected function processData(): static;
+
+    /**
+     * Get old/new values for a changed field.
+     */
+    protected function diff(string $field): ?stdClass
+    {
+        if (! array_key_exists($field, $this->changes)) {
+            return null;
+        }
+
+        return (object) [
+            'old' => $this->original[$field] ?? null,
+            'new' => $this->changes[$field],
+        ];
+    }
+
+    /**
+     * Render text only if value exists.
+     */
+    protected function addIf(int|float|string|array|null $value, string $text): string
+    {
+        if (is_null($value)) {
+            return '';
+        }
+
+        if (is_array($value)) {
+            if (in_array(null, $value, true) || in_array('', $value, true)) {
+                return '';
+            }
+
+            return vsprintf($text, $value);
+        }
+
+        return sprintf($text, $value);
+    }
+
+    /**
+     * Format number with optional suffix.
+     */
+    protected function number(int|float|null $value, string $append = ''): ?string
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return number_format($value, 0, '', ' ').$append;
+    }
+
+    /**
+     * Render field with change highlighting.
+     */
+    protected function changedField(string $field, mixed $current, string $text): string
+    {
+        $changes = $this->getWatchedChanges();
+
+        if (! $changes || ! array_key_exists($field, $changes)) {
+            return $this->addIf($current, "$text %s");
+        }
+
+        $diff = $changes[$field];
+
+        return sprintf(
+            "$text ❌%s → *%s*",
+            $diff['old'],
+            $diff['new']
+        );
+    }
+
+    /**
+     * Check if any watched fields were changed.
+     */
+    public function getWatchedChanges(): ?array
+    {
+        $originalData = isset($this->original['data'])
+            ? $this->original['data']->toArray()
+            : [];
+        $changedData = json_decode($this->changes['data'] ?? '{}', true);
+
+        $originalWatch = array_intersect_key($originalData, array_flip($this->watch));
+        $changedWatch = array_intersect_key($changedData, array_flip($this->watch));
+
+        $diff = [];
+
+        foreach ($changedWatch as $key => $newValue) {
+            $oldValue = $originalWatch[$key] ?? null;
+            if ($oldValue !== $newValue) {
+                $diff[$key] = [
+                    'old' => $oldValue,
+                    'new' => $newValue,
+                ];
+            }
+        }
+
+        return empty($diff) ? null : $diff;
+    }
+
+    /**
+     * Get final formatted message.
+     */
+    public function get(): string
+    {
+        return
+            "$this->header\n".
+            str_repeat('─', 12)."\n\n".
+            "$this->body";
+    }
+}

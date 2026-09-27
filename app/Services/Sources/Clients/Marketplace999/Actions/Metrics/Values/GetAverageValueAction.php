@@ -4,8 +4,8 @@ namespace App\Services\Sources\Clients\Marketplace999\Actions\Metrics\Values;
 
 use App\Models\Entity;
 use App\Services\Repository\EntityRepository;
-use App\Services\Sources\Enums\EntityFilter;
-use App\Services\Sources\Enums\SourceClientType;
+use App\Services\Sources\Shared\Enums\EntityFilter;
+use App\Services\Sources\Shared\Enums\SourceClientType;
 use Illuminate\Database\Eloquent\Builder;
 
 class GetAverageValueAction

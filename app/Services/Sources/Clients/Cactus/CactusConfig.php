@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Cactus;
 
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Support\BaseConfig;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Configuration\BaseSourceConfig;
 
-class CactusConfig extends BaseConfig
+class CactusConfig extends BaseSourceConfig
 {
     public static string $baseUrl = "https://www.cactus.md/ru/catalogue/";
 

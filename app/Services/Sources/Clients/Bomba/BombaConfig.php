@@ -2,10 +2,10 @@
 
 namespace App\Services\Sources\Clients\Bomba;
 
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Support\BaseConfig;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Configuration\BaseSourceConfig;
 
-class BombaConfig extends BaseConfig
+class BombaConfig extends BaseSourceConfig
 {
     public static string $baseUrl = "https://bomba.md/ru/category/";
 

@@ -2,8 +2,8 @@
 
 namespace App\Services\Sources\Clients\Marketplace999\Filters\Formatters\Metric;
 
-use App\Services\Sources\Enums\MetricKey;
-use App\Services\Sources\Filters\BaseFormatter;
+use App\Services\Sources\Shared\Enums\MetricKey;
+use App\Services\Sources\Shared\Formatting\BaseFormatter;
 use Carbon\Carbon;
 use stdClass;
 
