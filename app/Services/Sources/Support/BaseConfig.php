@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Sources\Configs;
+namespace App\Services\Sources\Support;
 
 use App\Services\Sources\Contracts\ConfigInterface;
 use App\Services\Sources\Enums\EntityFilter;

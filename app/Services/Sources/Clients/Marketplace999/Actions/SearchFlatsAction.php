@@ -6,10 +6,10 @@ use App\Services\Pipelines\EntityProcessing\FilterDuplicatesPipe;
 use App\Services\Pipelines\EntityProcessing\StoreEntitiesPipe;
 use App\Services\Sources\Clients\BaseClient;
 use App\Services\Sources\Clients\Marketplace999\Marketplace999Client;
-use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Contracts\ConfigInterface;
 use App\Services\Sources\Drivers\GraphQLDriver;
 use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Support\BaseConfig;
 use Illuminate\Pipeline\Pipeline;
 
 class SearchFlatsAction

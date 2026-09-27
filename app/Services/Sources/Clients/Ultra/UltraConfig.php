@@ -2,8 +2,8 @@
 
 namespace App\Services\Sources\Clients\Ultra;
 
-use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Enums\MetricKey;
+use App\Services\Sources\Support\BaseConfig;
 
 class UltraConfig extends BaseConfig
 {

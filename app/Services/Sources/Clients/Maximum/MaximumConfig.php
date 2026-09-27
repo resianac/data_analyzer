@@ -2,8 +2,8 @@
 
 namespace App\Services\Sources\Clients\Maximum;
 
-use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Enums\MetricKey;
+use App\Services\Sources\Support\BaseConfig;
 
 class MaximumConfig extends BaseConfig
 {

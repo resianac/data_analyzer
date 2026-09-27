@@ -1,5 +1,5 @@
 <script setup>
-import SearchInput from '@/components/forms/input/SearchInput.vue';
+import InputWithContent from '@/components/forms/input/InputWithContent.vue';
 import EntityMasterRow from '@/components/partials/catalog/card/EntityMasterRow.vue';
 import { ref, watch } from 'vue';
 import useAjax from '@/composables/useAjax.js';
@@ -35,7 +35,7 @@ const debouncedFetchMasters = useDebounceFn((value) => {
 </script>
 
 <template>
-    <SearchInput
+    <InputWithContent
         v-model="query"
         :loading="state.loading"
     >
@@ -81,5 +81,5 @@ const debouncedFetchMasters = useDebounceFn((value) => {
                 </div>
             </div>
         </template>
-    </SearchInput>
+    </InputWithContent>
 </template>

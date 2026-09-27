@@ -36,8 +36,6 @@ class EnterClient extends BaseClient
     {
         $variableClass = (new VariableFactory)->make($this->type, $filter);
 
-        dump("{$operationName->value}?page=$page");
-
         $data = $this->execute(
             "{$operationName->value}?page=$page",
             $variableClass::byItems()

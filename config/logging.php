@@ -156,6 +156,14 @@ return [
                 'level' => 'info',
                 'replace_placeholders' => true,
             ],
+
+            'run' => [
+                'driver' => 'daily',
+                'days' => env('SOURCES_LOG_DAYS', 14),
+                'path' => storage_path('logs/sources/runs.log'),
+                'level' => env('SOURCES_LOG_LEVEL', 'info'),
+                'replace_placeholders' => true,
+            ],
         ],
 
         "telegram" => [

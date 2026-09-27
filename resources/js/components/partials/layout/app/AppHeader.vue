@@ -4,7 +4,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import SearchInput from '@/components/forms/input/SearchInput.vue';
+import SearchInput from '@/components/forms/input/InputWithContent.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -37,8 +37,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
-
-const searchQuery = ref('');
 
 const isCurrentRoute = computed(
     () => (url: NonNullable<InertiaLinkProps['href']>) =>

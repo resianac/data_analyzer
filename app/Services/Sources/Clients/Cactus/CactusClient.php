@@ -36,8 +36,6 @@ class CactusClient extends BaseClient
     {
         $variableClass = (new VariableFactory)->make($this->type, $filter);
 
-        dump("{$param->value}?page=$page");
-
         $data = $this->execute(
             "{$param->value}?page_=page_$page",
             $variableClass::byItems()

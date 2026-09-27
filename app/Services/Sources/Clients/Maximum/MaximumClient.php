@@ -36,8 +36,6 @@ class MaximumClient extends BaseClient
     {
         $variableClass = (new VariableFactory)->make($this->type, $filter);
 
-        dump("{$param->value}/$page/");
-
         $data = $this->execute(
             "{$param->value}/$page/",
             $variableClass::byItems()

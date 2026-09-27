@@ -36,8 +36,6 @@ class UltraClient extends BaseClient
     {
         $variableClass = (new VariableFactory)->make($this->type, $filter);
 
-        dump("{$param->value}?page=$page");
-
         $data = $this->execute(
             "{$param->value}?page=$page",
             $variableClass::byItems()

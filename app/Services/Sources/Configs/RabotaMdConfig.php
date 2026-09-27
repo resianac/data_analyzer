@@ -3,6 +3,7 @@
 namespace App\Services\Sources\Configs;
 
 use App\Services\Sources\Enums\EntityFilter;
+use App\Services\Sources\Support\BaseConfig;
 
 class RabotaMdConfig extends BaseConfig
 {

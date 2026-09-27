@@ -35,10 +35,8 @@ watch(
 )
 
 const openSearch = () => {
+    searchInputRef.value?.$el.focus();
     isContentResultOpen.value = true;
-    setTimeout(() => {
-        searchInputRef.value?.$el.focus();
-    }, 100);
 };
 
 const closeSearch = () => {

@@ -2,8 +2,8 @@
 
 namespace App\Services\Sources\Contracts;
 
-use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Enums\SourceDriverType;
+use App\Services\Sources\Support\BaseConfig;
 use Illuminate\Support\Collection;
 
 interface DriverInterface

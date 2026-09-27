@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Services\Sources\Clients\Enter\Jobs;
+namespace App\Services\Sources\Clients\Cactus\Jobs;
 
-use App\Services\Sources\Clients\Enter\Actions\SearchEnterEntitiesAction;
-use App\Services\Sources\Clients\Enter\Enums\EnterSearchParam;
+use App\Services\Sources\Clients\Cactus\Actions\SearchCactusEntitiesAction;
+use App\Services\Sources\Clients\Cactus\Enums\CactusSearchParam;
 use App\Services\Sources\Orchestration\CatalogSource;
 use App\Services\Sources\Support\Jobs\BaseCatalogSourceJob;
 
-class SearchEnterCategoryJob extends BaseCatalogSourceJob
+class SearchCactusCategoryJob extends BaseCatalogSourceJob
 {
     public function __construct(
-        public readonly EnterSearchParam $category,
+        public readonly CactusSearchParam $category,
         ?string $runId = null,
     ) {
         parent::__construct($runId);
@@ -18,7 +18,7 @@ class SearchEnterCategoryJob extends BaseCatalogSourceJob
 
     protected function source(): string
     {
-        return CatalogSource::ENTER->value;
+        return CatalogSource::CACTUS->value;
     }
 
     protected function category(): string
@@ -28,6 +28,6 @@ class SearchEnterCategoryJob extends BaseCatalogSourceJob
 
     protected function runSearch(): void
     {
-        (new SearchEnterEntitiesAction($this->category))->handle();
+        (new SearchCactusEntitiesAction($this->category))->handle();
     }
 }

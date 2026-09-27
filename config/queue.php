@@ -44,6 +44,15 @@ return [
             'after_commit' => false,
         ],
 
+        'sources' => [
+            'driver' => 'database',
+            'connection' => env('SOURCES_DB_QUEUE_CONNECTION', env('DB_QUEUE_CONNECTION')),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => env('SOURCES_QUEUE', 'sources'),
+            'retry_after' => (int) env('SOURCES_QUEUE_RETRY_AFTER', 1200),
+            'after_commit' => false,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => env('BEANSTALKD_QUEUE_HOST', 'localhost'),

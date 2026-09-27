@@ -2,9 +2,9 @@
 
 namespace App\Services\Sources\Drivers;
 
-use App\Services\Sources\Configs\BaseConfig;
 use App\Services\Sources\Contracts\DriverInterface;
 use App\Services\Sources\Enums\SourceDriverType;
+use App\Services\Sources\Support\BaseConfig;
 use Illuminate\Http\Client\PendingRequest;
 
 abstract class BaseDriver implements DriverInterface
