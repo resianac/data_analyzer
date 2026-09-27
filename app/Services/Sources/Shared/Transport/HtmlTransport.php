@@ -25,10 +25,6 @@ class HtmlTransport extends BaseTransport
 
         $this->client = Http::timeout($this->config->get('timeout'))
             ->withHeaders($this->config->get('headers') ?? [])
-            ->withCookies([
-                'PHPSESSID' => '1039a25202e793d1bc0c6b069ec9b52a',
-                'customer_cart_id' => 'dWdtVWN1T3BOUVZWblNYcUt5bG1XUT09',
-            ], 'bomba.md')
             ->baseUrl($this->config->get('base_url'));
     }
 

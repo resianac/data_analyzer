@@ -3,10 +3,12 @@
 namespace App\Services\Listing\Clients;
 
 use App\Data\EntityMasterData;
+use App\Models\Entity;
 use App\Models\EntityMaster;
 use App\Services\Listing\BaseListing;
 use App\Services\Listing\Traits\RequestQuery;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\LaravelData\PaginatedDataCollection;
 
@@ -23,13 +25,16 @@ class EntityMasterListing extends BaseListing
 
     public function getQuery(): Builder
     {
-        $query = EntityMaster::query();
-
-        $query->with(['entities' => function ($query) {
-            $query->orderBy('data->is_out_of_stock');
-        }]);
-
-        return $query;
+        return EntityMaster::query()
+            ->has('entities')
+            ->with('entities')
+            ->orderBy(
+                Entity::query()
+                    ->select('data->is_out_of_stock')
+                    ->whereColumn('entities.entity_master_id', 'entity_masters.id')
+                    ->limit(1),
+                'asc'
+            );
     }
 
     /**
@@ -93,34 +98,38 @@ class EntityMasterListing extends BaseListing
         $min = $price['min'] ?? null;
         $max = $price['max'] ?? null;
 
-        return $query->when(
-            $min !== null && $max !== null,
-            fn (Builder $query) => $query->whereHas(
-                'entities',
-                function (Builder $query) use ($min, $max) {
-                    $query->where('data->price', '>=', intval($min));
-                    $query->where('data->price', '<=', intval($max));
-                }
-            )->when(
+        return $query
+            ->when(
+                $min !== null && $max !== null,
+                fn (Builder $query) => $query->whereHas(
+                    'entities',
+                    function (Builder $query) use ($min, $max) {
+                        $query->where('data->price', '>=', intval($min));
+                        $query->where('data->price', '<=', intval($max));
+                    }
+                )
+            )
+            ->when(
                 $this->getQueryParam('brands'),
                 fn (Builder $query, $brands) => $query->whereHas(
                     'entities',
                     fn (Builder $query) => $query->whereIn('data->brand', $brands)
                 )
-            )->when(
+            )
+            ->when(
                 $this->getQueryParam('sources'),
                 fn (Builder $query, $sources) => $query->whereHas(
                     'entities',
                     fn (Builder $query) => $query->whereIn('source', $sources)
                 )
-            )->when(
+            )
+            ->when(
                 $this->getQueryParam('has_discount'),
                 fn (Builder $query) => $query->whereHas(
                     'entities',
                     fn (Builder $query) => $query->where('data->discount', '>', 0)
                 )
-            )
-        );
+            );
     }
 
     protected function applySearch(Builder $query): Builder

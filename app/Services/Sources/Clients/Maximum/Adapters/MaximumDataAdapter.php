@@ -25,7 +25,7 @@ class MaximumDataAdapter implements AdapterInterface
                 old_price: $data->old_price,
                 discount: $data->discount ? (float) abs($data->discount) : 0,
                 currency: 'MDL',
-                brand: Str::of($matchId)->before('_')->value(),
+                brand: Str::of($matchId)->before('_')->ucfirst()->value(),
                 is_out_of_stock: $data->out_of_stock !== null,
                 url: $data->url,
                 image: $data->image,

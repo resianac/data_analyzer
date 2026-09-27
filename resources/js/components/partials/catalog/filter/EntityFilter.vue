@@ -21,10 +21,18 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['update:items']);
-
 const { query } = usePage().props;
-
 const isInternalLoading = ref(props.loading);
+
+const DEFAULT_FILTERS = {
+    has_discount: false,
+    sources: [],
+    brands: [],
+    price: {
+        min: 0,
+        max: 500000,
+    },
+};
 
 const sources = computed(() => {
     return Object.values(SOURCES).map(s => ({
@@ -34,6 +42,7 @@ const sources = computed(() => {
 })
 
 const filters = reactive({
+    ...structuredClone(DEFAULT_FILTERS),
     has_discount: query.has_discount === 'true',
     sources: query.sources?.split(',') ?? [],
     brands: query.brands?.split(',') ?? [],
@@ -43,39 +52,23 @@ const filters = reactive({
     }
 })
 
-const activeFiltersCount = computed(() => {
-    let count = 0;
-    if (filters.price.min > 0 || filters.price.max < 500000) count++;
-    if (filters.sources.length > 0) count++;
-    if (filters.brands.length > 0) count++;
-    if (filters.has_discount) count++;
-    return count;
-})
+const getActiveFilters = () =>
+    Object.fromEntries(
+        Object.entries(filters).map(([key, value]) => [
+            key,
+            JSON.stringify(value) === JSON.stringify(DEFAULT_FILTERS[key])
+                ? null
+                : value,
+        ])
+    );
+
+const activeFiltersCount = computed(
+    () => Object.values(getActiveFilters()).filter(Boolean).length
+);
 
 const clearAllFilters = () => {
-    filters.price.min = 0;
-    filters.price.max = 500000;
-    filters.sources = [];
-    filters.brands = [];
-    filters.has_discount = false;
-}
-
-// const emitWithDelay = () => {
-//     isInternalLoading.value = true;
-//
-//     if (timeoutId) {
-//         clearTimeout(timeoutId);
-//     }
-//
-//     const debouncedEmit = useDebounceFn((filters) => {
-//         emits('update:items', { ...filters });
-//     }, 500);
-//
-//     timeoutId = setTimeout(() => {
-//         emits('update:items', { ...filters });
-//         timeoutId = null;
-//     }, 1000);
-// }
+    Object.assign(filters, structuredClone(DEFAULT_FILTERS));
+};
 
 watch(() => props.loading, (newVal) => {
     if (!newVal && isInternalLoading.value) {
@@ -83,15 +76,14 @@ watch(() => props.loading, (newVal) => {
     }
 })
 
-const debouncedEmit = useDebounceFn((filtersData) => {
-    emits('update:items', { ...filtersData });
+const debouncedEmit = useDebounceFn(() => {
+    emits('update:items', getActiveFilters());
 }, 1000);
 
 watch(filters, () => {
     isInternalLoading.value = true;
-    debouncedEmit(filters);
+    debouncedEmit();
 }, { deep: true })
-
 </script>
 
 <template>

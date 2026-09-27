@@ -77,9 +77,6 @@ const bestPrice = sortedEntities.length > 0
                         <th class="text-left py-2.5 px-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                             Product / Variant
                         </th>
-                        <th class="text-left py-2.5 px-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                            Brand
-                        </th>
                         <th class="text-right py-2.5 px-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">
                             Price
                         </th>
@@ -145,12 +142,6 @@ const bestPrice = sortedEntities.length > 0
                         <td class="py-2.5 px-3">
                             <span class="text-sm text-foreground">
                                 {{ entity.data.raw?.variant }}
-                            </span>
-                        </td>
-
-                        <td class="py-2.5 px-3">
-                            <span class="text-sm text-muted-foreground">
-                                {{ entity.data?.brand ?? '—' }}
                             </span>
                         </td>
 
